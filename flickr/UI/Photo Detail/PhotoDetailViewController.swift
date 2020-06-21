@@ -18,7 +18,7 @@ class PhotoDetailViewController: UIViewController {
     // MARK: Private
     private var viewModel: PhotoDetailViewModel
     private var photoEntity: PhotoEntity
-    private let padding: CGFloat = 8
+    private let padding: CGFloat = 20
     private let commentsPlaceholder = "Add a Comment"
     
     private lazy var scrollView: UIScrollView = {
@@ -33,7 +33,8 @@ class PhotoDetailViewController: UIViewController {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = .boldSystemFont(ofSize: 17)
-        view.numberOfLines = 0
+        view.numberOfLines = 1
+        view.lineBreakMode = .byTruncatingMiddle
         return view
     }()
     
@@ -65,7 +66,10 @@ class PhotoDetailViewController: UIViewController {
     
     // MARK: - Initialization
     init(photoEntity: PhotoEntity) {
-        self.viewModel = PhotoDetailViewModel(flickrServicable: Services.flickrService)
+        self.viewModel = PhotoDetailViewModel(
+            flickrServicable: Services.flickrService,
+            oauthable: Services.oauth
+        )
         self.photoEntity = photoEntity
         super.init(nibName: nil, bundle: nil)
     }
@@ -112,8 +116,8 @@ class PhotoDetailViewController: UIViewController {
     private func setUpHeaderLabel(){
         self.scrollView.addSubview(self.headerLabel)
         self.headerLabel.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: padding).isActive = true
-        self.headerLabel.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: padding).isActive = true
-        self.headerLabel.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
+        self.headerLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.headerLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
     }
     
     private func setUpPhotoImage(){
@@ -126,8 +130,8 @@ class PhotoDetailViewController: UIViewController {
     private func setUpCommentsTextView(){
         self.scrollView.addSubview(self.commentsTextView)
         self.commentsTextView.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: padding).isActive = true
-        self.commentsTextView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor, constant: -padding * 2).isActive = true
-        self.commentsTextView.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
+        self.commentsTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.commentsTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
         self.commentsTextView.heightAnchor.constraint(equalToConstant: 100).isActive  = true
     }
     
@@ -157,8 +161,14 @@ extension PhotoDetailViewController: PhotoDetailViewModelDelegate {
     }
     
     func onSubmitCompleted() {
+        self.commentsTextView.text = ""
         let action = UIAlertAction(title: "OK", style: .default)
         self.displayAlert(with: "Success", message: "You've added a comment!", actions: [action])
+    }
+    
+    func onSignInFailed() {
+        let action = UIAlertAction(title: "OK", style: .default)
+        self.displayAlert(with: "Warning", message: "Unable to sign in to Flickr", actions: [action])
     }
     
 }
@@ -174,9 +184,6 @@ extension PhotoDetailViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         self.setSubmitBtn(enabled: textView.text.count > 0 && textView.text != commentsPlaceholder)
-        guard self.commentsTextView.text.count == 0 else { return }
-        self.commentsTextView.text = commentsPlaceholder
-        self.commentsTextView.textColor = .lightGray
     }
     
 }

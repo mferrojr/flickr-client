@@ -31,11 +31,13 @@ class PhotoCollectionViewController: UIViewController {
         return view
     }()
     
-    private lazy var signInButton: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Sign In", for: .normal)
-        btn.setTitleColor(.systemBlue, for: .normal)
-        return btn
+    private lazy var signInOrOutButton: UIBarButtonItem = {
+        return UIBarButtonItem(
+            title: "",
+            style: .plain,
+            target: self,
+            action: #selector(signInPressed)
+        )
     }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
@@ -44,7 +46,10 @@ class PhotoCollectionViewController: UIViewController {
     
     // MARK: - Initialization
     init() {
-        self.viewModel = PhotoCollectionViewModel(flickrServicable: Services.flickrService)
+        self.viewModel = PhotoCollectionViewModel(
+            flickrServicable: Services.flickrService,
+            oauthable: Services.oauth
+        )
         self.table = PhotoCollectionTable(viewModel: self.viewModel)
         
         super.init(nibName: nil, bundle: nil)
@@ -69,6 +74,10 @@ class PhotoCollectionViewController: UIViewController {
     }
     
     // MARK: - Functions
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.signInOrOutButton.title = Environment.shared.isSignedIn ? "Sign Out" : "Sign In"
+    }
        
     // MARK: Public
     func photoSelected(of photo: PhotoEntity) {
@@ -78,9 +87,7 @@ class PhotoCollectionViewController: UIViewController {
     // MARK: Private
     private func buildNavigationBar() {
         self.definesPresentationContext = true
-        self.navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(customView: self.signInButton)
-        ]
+        self.navigationItem.rightBarButtonItem = signInOrOutButton
     }
     
     private func setUpSearchController() {
@@ -123,7 +130,12 @@ class PhotoCollectionViewController: UIViewController {
         self.activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
         self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
     }
-
+    
+    @objc
+    private func signInPressed(_ btn: UIButton) {
+        self.viewModel.signInOrOut()
+    }
+    
 }
 
 // MARK: - Extensions
@@ -147,6 +159,19 @@ extension PhotoCollectionViewController: PhotoCollectionViewModelDelegate {
         
         let action = UIAlertAction(title: "OK", style: .default)
         self.displayAlert(with: "Warning", message: reason, actions: [action])
+    }
+    
+    func onSignInCompleted() {
+        self.signInOrOutButton.title = "Sign Out"
+    }
+    
+    func onSignInFailed() {
+        let action = UIAlertAction(title: "OK", style: .default)
+        self.displayAlert(with: "Warning", message: "Unable to sign in to Flickr", actions: [action])
+    }
+    
+    func onSignOutCompleted() {
+        self.signInOrOutButton.title = "Sign In"
     }
     
 }

@@ -4,6 +4,7 @@
 file_content = <<-CREDS_FILE_STRING
 struct FlickrSecrets {
     static let FlickrApiKey = "#{ENV['FLICKR_API_KEY']}"
+    static let FlickrApiSecret = "#{ENV['FLICKR_API_SECRET']}"
 }
 CREDS_FILE_STRING
 

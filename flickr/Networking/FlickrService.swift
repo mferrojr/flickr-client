@@ -32,7 +32,7 @@ enum FlickrServiceMethod: String {
 
 protocol FlickrServicable {
     func searchPhotos(with request: PhotoSearchRequest, page: Int, completion:@escaping (Result<PhotosSearchResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
-    func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<PhotoCommentsResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void)
 }
 
 final class FlickrService: FlickrServicable {
@@ -41,28 +41,24 @@ final class FlickrService: FlickrServicable {
     
     // MARK: Private
     private var client: HTTPClientable
+    private var oauth: OAuthable
 
-    // https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=a6ef5dcbcaf68383e4bda344ed3fb667&format=json&nojsoncallback=1&auth_token=72157714791251361-7ae13992a6301640&api_sig=c85c9b1ef477c92e6025716fdac7610e
-    private let apiBaseURL = URL(string: "https://www.flickr.com/services/rest/?format=json&nojsoncallback=1")!
+    private let apiBaseURL = URL(string: "https://api.flickr.com/services/rest/")!
     
     // MARK: - Initialization
-    init(client: HTTPClientable) {
+    init(client: HTTPClientable, oauthable: OAuthable) {
         self.client = client
+        self.oauth = oauthable
     }
     
     // MARK: - Functions
     
     // MARK: Public
     func searchPhotos(with request: PhotoSearchRequest, page: Int, completion:@escaping (Result<PhotosSearchResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        
         var queryItems = self.buildBaseQueryItems(method: .photosSearch)
         queryItems.append(URLQueryItem(name: "tags", value: request.tag))
         queryItems.append(URLQueryItem(name: "page", value: String(page)))
-        
-        if false {
-        } else {
-            queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
-        }
+        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
@@ -91,45 +87,32 @@ final class FlickrService: FlickrServicable {
         }
     }
     
-    func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<PhotoCommentsResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        let request = HTTPRequest(
-            method: .get,
-            baseURL: apiBaseURL,
-            path: "",
-            queryItems: [
-                URLQueryItem(name: "method", value: "flickr.photos.comments.addComment"),
-                URLQueryItem(name: "photo_id", value: request.photoId),
-                URLQueryItem(name: "comment_text", value: request.comments),
-                URLQueryItem(name: "api_key", value: "")
-            ]
-        )
-
-        return self.client.perform(request) { result in
+    func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void) {
+        var parameters = self.buildBaseDictionary(method: .addComment)
+        parameters["photo_id"] = request.photoId
+        parameters["comment_text"] = request.comments
+        
+        self.oauth.post(to: self.apiBaseURL, with: parameters, completion: { result in
             switch result {
-            case .success(let response):
-                guard let response = try? response.decode(to: PhotoCommentsResponse.self) else {
-                    completion(.failure(FlickrServiceError.invalidResponse))
-                    return
-                }
-                
-                completion(.success(response.body))
-            case .failure(let error):
-                switch error {
-                case .cancelled:
-                    completion(.failure(FlickrServiceError.cancelled))
-                default:
-                    completion(.failure(FlickrServiceError.network))
-                }
+            case .success:
+                completion(.success(()))
+            case .failure:
+               completion(.failure(FlickrServiceError.network))
             }
-        }
+        })
+    }
+    
+    // MARK: Private
+    private func buildBaseDictionary(method: FlickrServiceMethod) -> [String:String] {
+        return [
+            "method": method.rawValue,
+            "format": "json",
+            "nojsoncallback": "1"
+        ]
     }
     
     private func buildBaseQueryItems(method: FlickrServiceMethod) -> [URLQueryItem] {
-        return [
-            URLQueryItem(name: "method", value: method.rawValue),
-            URLQueryItem(name: "format", value: "json"),
-            URLQueryItem(name: "nojsoncallback", value: "1")
-        ]
+        return self.buildBaseDictionary(method: method).map{ URLQueryItem(name: $0, value: $1) }
     }
 
 }

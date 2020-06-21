@@ -11,6 +11,9 @@ import Foundation
 protocol PhotoCollectionViewModelDelegate: class {
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
     func onFetchFailed(with reason: String)
+    func onSignOutCompleted()
+    func onSignInCompleted()
+    func onSignInFailed()
 }
 
 class PhotoCollectionViewModel {
@@ -29,15 +32,17 @@ class PhotoCollectionViewModel {
     private var currentPage: Int
     private var total: Int
     private var flickrService: FlickrServicable
+    private var oauthable: OAuthable
     private var photos: [PhotoEntity]
     private var dataTask: URLSessionDataTask?
 
     // MARK: - Initialization
-    init(flickrServicable: FlickrServicable) {
+    init(flickrServicable: FlickrServicable, oauthable: OAuthable) {
         self.isFetchInProgress = false
         self.currentPage = 1
         self.total = 0
         self.flickrService = flickrServicable
+        self.oauthable = oauthable
         self.photos = [PhotoEntity]()
     }
     
@@ -53,9 +58,9 @@ class PhotoCollectionViewModel {
     }
     
     func fetchPhotos(by tag: String) {
-        guard !isFetchInProgress else { return }
+        guard !self.isFetchInProgress else { return }
 
-        isFetchInProgress = true
+        self.isFetchInProgress = true
         
         let request = PhotoSearchRequest(tag: tag)
         
@@ -105,7 +110,23 @@ class PhotoCollectionViewModel {
         default:
             break
         }
-       
+    }
+    
+    func signInOrOut() {
+        if Environment.shared.isSignedIn {
+            Environment.shared.isSignedIn = false
+            self.oauthable.logout()
+            self.delegate?.onSignOutCompleted()
+        } else {
+            self.oauthable.doOAuth { result in
+                switch result {
+                case .success:
+                    self.delegate?.onSignInCompleted()
+                case .failure:
+                    self.delegate?.onSignInFailed()
+                }
+            }
+        }
     }
     
     // MARK: Private

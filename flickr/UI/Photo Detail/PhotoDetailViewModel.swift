@@ -11,6 +11,7 @@ import Foundation
 protocol PhotoDetailViewModelDelegate: class {
     func onSubmitFailed(with: String)
     func onSubmitCompleted()
+    func onSignInFailed()
 }
 
 class PhotoDetailViewModel {
@@ -22,11 +23,12 @@ class PhotoDetailViewModel {
     
     // MARK: Private
     private var flickrService: FlickrServicable
-    private var dataTask: URLSessionDataTask?
+    private var oauthable: OAuthable
 
     // MARK: - Initialization
-    init(flickrServicable: FlickrServicable) {
+   init(flickrServicable: FlickrServicable, oauthable: OAuthable) {
         self.flickrService = flickrServicable
+        self.oauthable = oauthable
     }
     
     // MARK: - Functions
@@ -34,8 +36,28 @@ class PhotoDetailViewModel {
     // MARK: Public
     func add(by photoId: String, with comments: String) {
         let request = PhotoCommentsRequest(photoId: photoId, comments: comments)
-        
-        self.dataTask = self.flickrService.addComment(with: request, completion: { result in
+
+        if Environment.shared.isSignedIn {
+            self.handleAddingComment(with: request)
+        } else {
+            self.handleOAuth(with: request)
+        }
+    }
+    
+    // MARK: Private
+    private func handleOAuth(with request: PhotoCommentsRequest) {
+        self.oauthable.doOAuth { [weak self] result in
+            switch result {
+            case .success:
+               self?.handleAddingComment(with: request)
+            case .failure:
+               self?.delegate?.onSignInFailed()
+            }
+        }
+    }
+    
+    private func handleAddingComment(with request: PhotoCommentsRequest) {
+        self.flickrService.addComment(with: request, completion: { result in
             switch result {
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -47,9 +69,6 @@ class PhotoDetailViewModel {
                 }
             }
         })
-    }
-    
-    func cancelFetchData() {
     }
     
 }

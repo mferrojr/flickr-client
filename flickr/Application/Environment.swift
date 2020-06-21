@@ -1,5 +1,5 @@
 //
-//  PhotoCommentsRequest.swift
+//  Environment.swift
 //  flickr
 //
 //  Created by Michael Ferro, Jr. on 6/21/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PhotoCommentsRequest {
-    var photoId: String
-    var comments: String
+struct Environment {
+    var isSignedIn:Bool
+    static var shared = Environment(isSignedIn: false)
 }

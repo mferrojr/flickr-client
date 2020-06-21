@@ -11,6 +11,8 @@ import Foundation
 class Services {
     
     static let httpClient: HTTPClientable = HTTPClient()
-    static let flickrService: FlickrServicable = FlickrService(client: httpClient)
+    static let oauth: OAuthable = OAuth()
+    static let flickrService: FlickrServicable = FlickrService(client: httpClient, oauthable: oauth)
+    
     
 }
