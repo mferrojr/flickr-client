@@ -82,7 +82,6 @@ extension PhotoCollectionTable: UITableViewDataSource {
     } else {
         cell.configure(with: viewModel.entity(at: indexPath.row), at: indexPath)
     }
-    cell.delegate = self.owner
     
     return cell
   }

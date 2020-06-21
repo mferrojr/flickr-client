@@ -75,7 +75,7 @@ class PhotoCollectionViewController: UIViewController {
         self.coordinator?.viewPhoto(of: photo)
     }
 
-     // MARK: Private
+    // MARK: Private
     private func buildNavigationBar() {
         self.definesPresentationContext = true
         self.navigationItem.rightBarButtonItems = [
@@ -132,9 +132,9 @@ class PhotoCollectionViewController: UIViewController {
 extension PhotoCollectionViewController: PhotoCollectionViewModelDelegate {
     
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        activityIndicator.stopAnimating()
+        
         guard let newIndexPathsToReload = newIndexPathsToReload else {
-              activityIndicator.stopAnimating()
-              tableView.isHidden = false
               tableView.reloadData()
               return
         }
@@ -174,15 +174,21 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
 
 }
 
-// MARK: UISearchResultsUpdating
+// MARK: UISearchResultsUpdatingroc
 extension PhotoCollectionViewController: UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = self.searchText() else { return }
+        self.viewModel.reset()
+        self.activityIndicator.stopAnimating()
+        
+        guard let searchText = self.searchText() else {
+            self.landingView.isHidden = false
+            return
+        }
         if self.viewModel.totalCount == 0 {
             self.activityIndicator.startAnimating()
         }
-        self.landingView.isHidden = self.viewModel.totalCount == 0
+        self.landingView.isHidden = true
         self.viewModel.fetchPhotos(by: searchText)
     }
 
@@ -199,21 +205,7 @@ extension PhotoCollectionViewController: UITableViewDataSourcePrefetching {
     
 }
 
-// MARK: PhotoCollectionTableViewCellDelegate
-extension PhotoCollectionViewController: PhotoCollectionTableViewCellDelegate {
-    
-    func updateAt(indexPath: IndexPath) {
-        //DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            /*self.tableView.reloadRows(
-                at: [indexPath],
-                with: .fade)*/
-            self.tableView.endUpdates()
-        //}
-    }
-}
-
-
+// MARK: Helpers
 private extension PhotoCollectionViewController {
 
     func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
@@ -223,7 +215,7 @@ private extension PhotoCollectionViewController {
     }
     
     func searchText() -> String? {
-        guard let searchText = self.searchController?.searchBar.text, searchText.count > 2 else {
+        guard let searchText = self.searchController?.searchBar.text, searchText.count > 0 else {
             return nil
         }
         return searchText

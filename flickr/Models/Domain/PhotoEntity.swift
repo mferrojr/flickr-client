@@ -21,16 +21,16 @@ struct PhotoEntity {
 
 extension PhotoEntity {
     
-    var largePhotoUrl: String {
-        return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_b.jpg"
+    var largePhotoUrl: URL? {
+        return URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_b.jpg")
     }
     
-    var mediumPhotoUrl: String {
-        return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_m.jpg"
+    var mediumPhotoUrl: URL? {
+        return URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_m.jpg")
     }
     
-    var largeSquareUrl: String {
-        return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg"
+    var largeSquareUrl: URL? {
+        return URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg")
     }
     
 }

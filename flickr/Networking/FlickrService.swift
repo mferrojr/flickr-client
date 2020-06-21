@@ -11,6 +11,7 @@ import Foundation
 enum FlickrServiceError : Error {
     case invalidResponse
     case network
+    case cancelled
     
     var reason: String {
         switch self {
@@ -18,6 +19,8 @@ enum FlickrServiceError : Error {
             return "Unexpected response format"
         case .network:
             return "An error occuring retriving data"
+        case .cancelled:
+            return "Request cancelled"
         }
     }
 }
@@ -77,8 +80,13 @@ final class FlickrService: FlickrServicable {
                 }
                 
                 completion(.success(response.body))
-            case .failure:
-                completion(.failure(FlickrServiceError.network))
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
             }
         }
     }
@@ -105,8 +113,13 @@ final class FlickrService: FlickrServicable {
                 }
                 
                 completion(.success(response.body))
-            case .failure:
-                completion(.failure(FlickrServiceError.network))
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
             }
         }
     }

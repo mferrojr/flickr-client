@@ -64,16 +64,22 @@ class PhotoCollectionViewModel {
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.isFetchInProgress = false
-                    self.delegate?.onFetchFailed(with: error.reason)
+                    switch error {
+                    case .cancelled:
+                        break
+                    default:
+                        self.delegate?.onFetchFailed(with: error.reason)
+                    }
                 }
             case .success(let response):
                 DispatchQueue.main.async {
-                    self.currentPage = response.photosMeta.page
+                    self.currentPage += 1
                     self.isFetchInProgress = false
                     self.total = response.photosMeta.total
                     let photos = response.photosMeta.photos.map({ $0.toEntity() })
                     self.photos.append(contentsOf: photos)
-                    if self.currentPage > 1 {
+                    
+                    if response.photosMeta.page > 1 {
                         let indexPathsToReload = self.calculateIndexPathsToReload(from: photos)
                         self.delegate?.onFetchCompleted(with: indexPathsToReload)
                     } else {
@@ -92,8 +98,14 @@ class PhotoCollectionViewModel {
     }
     
     func cancelFetchData() {
-        self.dataTask?.cancel()
-        self.dataTask = nil
+        switch self.dataTask?.state {
+        case .some(.running):
+            self.dataTask?.cancel()
+            self.dataTask = nil
+        default:
+            break
+        }
+       
     }
     
     // MARK: Private

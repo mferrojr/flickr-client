@@ -28,6 +28,7 @@ enum HTTPError: Error {
     case requestFailed
     case decodingFailure
     case statusCode
+    case cancelled
 }
 
 enum HTTPResult<Body> {
@@ -63,7 +64,12 @@ struct HTTPClient: HTTPClientable {
 
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(.requestFailed))
+                if let error = error, error.localizedDescription == "cancelled" {
+                    completion(.failure(.cancelled))
+                } else {
+                    completion(.failure(.requestFailed))
+                }
+                
                 return
             }
             completion(.success(HTTPResponse<Data?>(statusCode: httpResponse.statusCode, body: data)))

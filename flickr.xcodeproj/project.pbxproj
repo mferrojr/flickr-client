@@ -42,6 +42,7 @@
 		74992309249EA9BC00F4E75F /* PhotoCollectionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74992307249EA9BC00F4E75F /* PhotoCollectionTableViewCell.xib */; };
 		7499230B249ED74F00F4E75F /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499230A249ED74F00F4E75F /* ImageLoader.swift */; };
 		7499230D249ED77A00F4E75F /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499230C249ED77A00F4E75F /* ImageCache.swift */; };
+		74992314249FAE5400F4E75F /* FlickrImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74992313249FAE5400F4E75F /* FlickrImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		74992307249EA9BC00F4E75F /* PhotoCollectionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCollectionTableViewCell.xib; sourceTree = "<group>"; };
 		7499230A249ED74F00F4E75F /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		7499230C249ED77A00F4E75F /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		74992313249FAE5400F4E75F /* FlickrImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +201,7 @@
 		749922C1249D669200F4E75F /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				74992312249FAE3D00F4E75F /* Common */,
 				74992303249EA4C200F4E75F /* Extensions */,
 				749922C5249D80A800F4E75F /* Navigation */,
 				749922C4249D80A000F4E75F /* Photo Detail */,
@@ -335,6 +338,14 @@
 				74992304249EA73F00F4E75F /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		74992312249FAE3D00F4E75F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				74992313249FAE5400F4E75F /* FlickrImageView.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -516,6 +527,7 @@
 				74992302249E960900F4E75F /* PhotoEntity.swift in Sources */,
 				74992298249D4BCC00F4E75F /* flickr.xcdatamodeld in Sources */,
 				749922F2249E7FC600F4E75F /* PhotosCommentsResponse.swift in Sources */,
+				74992314249FAE5400F4E75F /* FlickrImageView.swift in Sources */,
 				74992305249EA73F00F4E75F /* UIViewController+Extensions.swift in Sources */,
 				749922E3249DA0AA00F4E75F /* HTTPRequest.swift in Sources */,
 				74992290249D4BCC00F4E75F /* SceneDelegate.swift in Sources */,
