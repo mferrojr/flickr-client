@@ -17,7 +17,7 @@ class PhotoDetailViewController: UIViewController {
     
     // MARK: Private
     private var viewModel: PhotoDetailViewModel
-    private var photoEntity: PhotoEntity
+    private var model: PhotoCollectionModel
     private let padding: CGFloat = 20
     private let commentsPlaceholder = "Add a Comment"
     
@@ -44,6 +44,15 @@ class PhotoDetailViewController: UIViewController {
         return view
     }()
     
+    private lazy var authorLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 13)
+        view.numberOfLines = 1
+        view.lineBreakMode = .byTruncatingMiddle
+        return view
+    }()
+    
     private lazy var commentsTextView: UITextView = {
         let view = UITextView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -65,12 +74,12 @@ class PhotoDetailViewController: UIViewController {
     }()
     
     // MARK: - Initialization
-    init(photoEntity: PhotoEntity) {
+    init(model: PhotoCollectionModel) {
         self.viewModel = PhotoDetailViewModel(
             flickrServicable: Services.flickrService,
             oauthable: Services.oauth
         )
-        self.photoEntity = photoEntity
+        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -85,14 +94,16 @@ class PhotoDetailViewController: UIViewController {
         self.setUpScrollView()
         self.setUpHeaderLabel()
         self.setUpPhotoImage()
+        self.setUpAuthorLabel()
         self.setUpCommentsTextView()
         self.setUpSubmit()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.headerLabel.text = self.photoEntity.title
-        guard let url = self.photoEntity.mediumPhotoUrl else { return }
+        self.headerLabel.text = self.model.photo.title
+        self.authorLabel.text = "Author: \(self.model.person?.userName ?? "N/A")"
+        guard let url = self.model.photo.mediumPhotoUrl else { return }
         self.photoImageView.load(url: url)
         self.setSubmitBtn(enabled: false)
     }
@@ -102,7 +113,7 @@ class PhotoDetailViewController: UIViewController {
     // MARK: Private
     @objc
     private func submitPressed(_ sender: UIButton) {
-        self.viewModel.add(by: self.photoEntity.id, with: self.commentsTextView.text)
+        self.viewModel.add(by: self.model.photo.id, with: self.commentsTextView.text)
     }
     
     private func setUpScrollView() {
@@ -127,9 +138,16 @@ class PhotoDetailViewController: UIViewController {
         self.photoImageView.heightAnchor.constraint(equalToConstant: 150).isActive  = true
     }
     
+    private func setUpAuthorLabel(){
+        self.scrollView.addSubview(self.authorLabel)
+        self.authorLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: padding).isActive = true
+        self.authorLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.authorLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+    }
+    
     private func setUpCommentsTextView(){
         self.scrollView.addSubview(self.commentsTextView)
-        self.commentsTextView.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: padding).isActive = true
+        self.commentsTextView.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: padding).isActive = true
         self.commentsTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
         self.commentsTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
         self.commentsTextView.heightAnchor.constraint(equalToConstant: 100).isActive  = true

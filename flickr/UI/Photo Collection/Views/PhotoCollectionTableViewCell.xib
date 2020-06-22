@@ -9,35 +9,47 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="190" id="KGk-i7-Jjw" customClass="PhotoCollectionTableViewCell" customModule="flickr" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="415" height="190"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="222" id="KGk-i7-Jjw" customClass="PhotoCollectionTableViewCell" customModule="flickr_client" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="415" height="222"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="415" height="190"/>
+                <rect key="frame" x="0.0" y="0.0" width="415" height="222"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05o-1R-wfN" userLabel="Container View">
-                        <rect key="frame" x="20" y="10" width="375" height="170"/>
+                        <rect key="frame" x="20" y="10" width="375" height="202"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FLX-fg-wKo" customClass="FlickrImageView" customModule="flickr" customModuleProvider="target">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FLX-fg-wKo" customClass="FlickrImageView" customModule="flickr_client" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="yBY-sz-crl"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXK-Ih-ihv">
-                                <rect key="frame" x="0.0" y="158" width="375" height="12"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXK-Ih-ihv">
+                                <rect key="frame" x="0.0" y="158" width="375" height="28.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NFt-Mv-kPX">
+                                <rect key="frame" x="0.0" y="186.5" width="375" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="2Ge-4L-ORd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="NFt-Mv-kPX" firstAttribute="leading" secondItem="vXK-Ih-ihv" secondAttribute="leading" id="07D-S0-aQs"/>
+                            <constraint firstAttribute="bottom" secondItem="NFt-Mv-kPX" secondAttribute="bottom" constant="-5.5" id="53c-ir-zVR"/>
                             <constraint firstItem="FLX-fg-wKo" firstAttribute="leading" secondItem="05o-1R-wfN" secondAttribute="leading" id="Dvb-FO-gLD"/>
                             <constraint firstItem="vXK-Ih-ihv" firstAttribute="leading" secondItem="05o-1R-wfN" secondAttribute="leading" id="EUP-iW-Y4X"/>
+                            <constraint firstItem="NFt-Mv-kPX" firstAttribute="trailing" secondItem="vXK-Ih-ihv" secondAttribute="trailing" id="JDd-Tk-WUm"/>
                             <constraint firstItem="FLX-fg-wKo" firstAttribute="top" secondItem="05o-1R-wfN" secondAttribute="top" id="JWs-8R-S1W"/>
-                            <constraint firstAttribute="bottom" secondItem="vXK-Ih-ihv" secondAttribute="bottom" id="aPs-Nc-vhu"/>
+                            <constraint firstItem="NFt-Mv-kPX" firstAttribute="top" secondItem="vXK-Ih-ihv" secondAttribute="bottom" id="LGT-Fc-PYv"/>
                             <constraint firstAttribute="trailing" secondItem="FLX-fg-wKo" secondAttribute="trailing" id="eQI-8k-So5"/>
                             <constraint firstAttribute="trailing" secondItem="vXK-Ih-ihv" secondAttribute="trailing" id="gBU-FR-9OG"/>
                             <constraint firstItem="vXK-Ih-ihv" firstAttribute="top" secondItem="FLX-fg-wKo" secondAttribute="bottom" constant="8" id="nCD-Rt-cVX"/>
@@ -55,8 +67,9 @@
             <connections>
                 <outlet property="photoImageView" destination="FLX-fg-wKo" id="Vkt-3D-R2s"/>
                 <outlet property="titleLabel" destination="vXK-Ih-ihv" id="NBG-Lu-IN4"/>
+                <outlet property="userName" destination="NFt-Mv-kPX" id="KRY-mL-Nol"/>
             </connections>
-            <point key="canvasLocation" x="206.52173913043481" y="202.23214285714286"/>
+            <point key="canvasLocation" x="206.52173913043481" y="212.94642857142856"/>
         </tableViewCell>
     </objects>
 </document>

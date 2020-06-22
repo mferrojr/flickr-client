@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum FlickrServiceError : Error {
+enum FlickrServiceError: Error {
     case invalidResponse
     case network
     case cancelled
@@ -28,10 +28,12 @@ enum FlickrServiceError : Error {
 enum FlickrServiceMethod: String {
     case photosSearch = "flickr.photos.search"
     case addComment = "flickr.photos.comments.addComment"
+    case peopleGetInfo = "flickr.people.getInfo"
 }
 
 protocol FlickrServicable {
     func searchPhotos(with request: PhotoSearchRequest, page: Int, completion:@escaping (Result<PhotosSearchResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
     func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void)
 }
 
@@ -71,6 +73,38 @@ final class FlickrService: FlickrServicable {
             switch result {
             case .success(let response):
                 guard let response = try? response.decode(to: PhotosSearchResponse.self) else {
+                    completion(.failure(FlickrServiceError.invalidResponse))
+                    return
+                }
+                
+                completion(.success(response.body))
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
+            }
+        }
+    }
+    
+    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
+        var queryItems = self.buildBaseQueryItems(method: .peopleGetInfo)
+        queryItems.append(URLQueryItem(name: "user_id", value: request.userId))
+        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
+        
+        let request = HTTPRequest(
+            method: .get,
+            baseURL: apiBaseURL,
+            path: "",
+            queryItems: queryItems
+        )
+
+        return self.client.perform(request) { result in
+            switch result {
+            case .success(let response):
+                guard let response = try? response.decode(to: PeopleInfoResponse.self) else {
                     completion(.failure(FlickrServiceError.invalidResponse))
                     return
                 }

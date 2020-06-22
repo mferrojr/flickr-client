@@ -29,8 +29,8 @@ class MainCoordinator: Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
     
-    func viewPhoto(of photo: PhotoEntity) {
-        let vc = PhotoDetailViewController(photoEntity: photo)
+    func viewPhoto(of photo: PhotoCollectionModel) {
+        let vc = PhotoDetailViewController(model: photo)
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: false)
     }

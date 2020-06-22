@@ -20,26 +20,30 @@ class PhotoCollectionTableViewCell: UITableViewCell {
     // MARK: Private
     @IBOutlet private weak var photoImageView: FlickrImageView!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var userName: UILabel!
     
     // MARK: - Initialization
     override func prepareForReuse() {
         super.prepareForReuse()
         self.photoImageView.reset()
         self.titleLabel.text = nil
+        self.userName.text = nil
     }
 
     // MARK: - Functions
 
     // MARK: Public
-    func configure(with entity: PhotoEntity?, at indexPath: IndexPath) {
+    func configure(with entity: PhotoCollectionModel?, at indexPath: IndexPath) {
         guard let entity = entity else {
             self.titleLabel.text = nil
+            self.userName.text = nil
             return
         }
 
-        self.titleLabel.text = entity.title
+        self.titleLabel.text = entity.photo.title
+        self.userName.text = "Author: \(entity.person?.userName ?? "N/A")"
         
-        guard let url = entity.mediumPhotoUrl else {
+        guard let url = entity.photo.mediumPhotoUrl else {
             return
         }
         self.photoImageView.load(url: url)

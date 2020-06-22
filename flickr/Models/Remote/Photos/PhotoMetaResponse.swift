@@ -14,6 +14,7 @@ struct PhotoMetaResponse {
     var farm: Int
     var server: Int
     var secret: String
+    var owner: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -21,6 +22,7 @@ struct PhotoMetaResponse {
         case farm
         case server
         case secret
+        case owner
     }
 }
 
@@ -37,6 +39,7 @@ extension PhotoMetaResponse: Decodable {
         farm = try container.decode(Int.self, forKey: .farm)
         server = try Int(container.decode(String.self, forKey: .server)) ?? 0
         secret = try container.decode(String.self, forKey: .secret)
+        owner = try container.decode(String.self, forKey: .owner)
     }
 
 }
@@ -50,7 +53,8 @@ extension PhotoMetaResponse {
             title: title,
             farm: farm,
             server: server,
-            secret: secret
+            secret: secret,
+            owner: owner
         )
     }
 }
