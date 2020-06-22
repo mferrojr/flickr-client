@@ -31,6 +31,12 @@ class PhotoCollectionViewController: UIViewController {
         return view
     }()
     
+    private lazy var landingLabel: UILabel = {
+        return UILabel()
+    }()
+    
+    
+    
     private lazy var signInOrOutButton: UIBarButtonItem = {
         return UIBarButtonItem(
             title: "",
@@ -71,6 +77,7 @@ class PhotoCollectionViewController: UIViewController {
         self.setUpTableView()
         self.setUpLandingView()
         self.setUpActivityIndicator()
+        self.updateBackgroundText()
     }
     
     // MARK: - Functions
@@ -115,12 +122,10 @@ class PhotoCollectionViewController: UIViewController {
     }
     
     private func setUpLandingView() {
-        let label = UILabel()
-        label.text = "Find Your Inspiration"
-        self.landingView.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerYAnchor.constraint(equalTo: self.landingView.centerYAnchor).isActive = true
-        label.centerXAnchor.constraint(equalTo: self.landingView.centerXAnchor).isActive = true
+        self.landingView.addSubview(self.landingLabel)
+        self.landingLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.landingLabel.centerYAnchor.constraint(equalTo: self.landingView.centerYAnchor).isActive = true
+        self.landingLabel.centerXAnchor.constraint(equalTo: self.landingView.centerXAnchor).isActive = true
         self.tableView.backgroundView = self.landingView
     }
     
@@ -144,7 +149,8 @@ class PhotoCollectionViewController: UIViewController {
 extension PhotoCollectionViewController: PhotoCollectionViewModelDelegate {
     
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-        activityIndicator.stopAnimating()
+        self.activityIndicator.stopAnimating()
+        self.updateBackgroundText()
         
         guard let newIndexPathsToReload = newIndexPathsToReload else {
               tableView.reloadData()
@@ -203,18 +209,19 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
 extension PhotoCollectionViewController: UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
-        self.viewModel.reset()
-        self.activityIndicator.stopAnimating()
-        
-        guard let searchText = self.searchText() else {
-            self.landingView.isHidden = false
-            return
-        }
-        if self.viewModel.totalCount == 0 {
+        if let _ = self.searchText(), self.viewModel.totalCount == 0 {
             self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
         }
-        self.landingView.isHidden = true
+        
+        self.viewModel.reset()
+        self.updateBackgroundText()
+        
+        guard let searchText = self.searchText() else { return }
+        
         self.viewModel.fetchPhotos(by: searchText)
+        self.landingView.isHidden = true
     }
 
 }
@@ -244,5 +251,15 @@ private extension PhotoCollectionViewController {
             return nil
         }
         return searchText
+    }
+    
+    func updateBackgroundText() {
+        if let _ = searchText() {
+            self.landingLabel.text = "No Results"
+            self.landingView.isHidden = self.viewModel.totalCount > 0
+        } else {
+            self.landingLabel.text = "Find Your Inspiration"
+            self.landingView.isHidden = false
+        }
     }
 }
