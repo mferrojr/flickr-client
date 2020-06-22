@@ -48,7 +48,7 @@ class PhotoCollectionTable: NSObject {
 extension PhotoCollectionTable: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 250
+        return 260
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

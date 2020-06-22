@@ -14,6 +14,7 @@ struct PhotoEntity {
     var farm: Int
     var server: Int
     var secret: String
+    var owner: String
 
 }
 

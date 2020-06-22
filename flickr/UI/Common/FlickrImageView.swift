@@ -13,6 +13,9 @@ import UIKit
 // Reference: https://github.com/sgl0v/OnSwiftWings/blob/master/ImageCache.playground/Sources/MovieTableViewCell.swift
 class FlickrImageView: UIImageView {
  
+    // MARK: - Variables
+    
+    // MARK: Private
     private var cancellable: AnyCancellable?
     private lazy var animator: UIViewPropertyAnimator = {
         return UIViewPropertyAnimator(duration: 0.3, curve: .easeInOut)

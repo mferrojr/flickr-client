@@ -35,8 +35,6 @@ class PhotoCollectionViewController: UIViewController {
         return UILabel()
     }()
     
-    
-    
     private lazy var signInOrOutButton: UIBarButtonItem = {
         return UIBarButtonItem(
             title: "",
@@ -87,7 +85,7 @@ class PhotoCollectionViewController: UIViewController {
     }
        
     // MARK: Public
-    func photoSelected(of photo: PhotoEntity) {
+    func photoSelected(of photo: PhotoCollectionModel) {
         self.coordinator?.viewPhoto(of: photo)
     }
 
