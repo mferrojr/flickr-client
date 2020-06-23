@@ -201,6 +201,7 @@ class PhotoCollectionViewModel {
            case .cancelled:
                break
            default:
+               self?.cancelFetchData()
                self?.delegate?.onFetchFailed(with: error.reason)
            }
         }

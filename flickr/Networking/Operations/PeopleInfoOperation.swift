@@ -43,8 +43,8 @@ class PeopleInfoOperation: BaseOperation {
         self.dataTask = self.flickrServicable.getPeopleInfo(with: request) { result in
             switch result {
             case .success(let data):
-                self.context.userId = data.person.id
-                self.context.userName = data.person.username.content
+                self.context.userId = data?.person.id ?? ""
+                self.context.userName = data?.person.username.content ?? ""
                 self.done()
             case .failure(let error):
                 self.context.error = error

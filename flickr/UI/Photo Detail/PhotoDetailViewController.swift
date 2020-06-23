@@ -47,9 +47,70 @@ class PhotoDetailViewController: UIViewController {
     private lazy var authorLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.font = .systemFont(ofSize: 13)
+        view.font = .systemFont(ofSize: 15, weight: .semibold)
         view.numberOfLines = 1
         view.lineBreakMode = .byTruncatingMiddle
+        return view
+    }()
+    
+    private lazy var descriptionLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 13, weight: .regular)
+        view.numberOfLines = 0
+        return view
+    }()
+    
+    private lazy var statsStack: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .horizontal
+        view.distribution = .fillProportionally
+        return view
+    }()
+    
+    private lazy var numFavesLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 13)
+        view.numberOfLines = 0
+        return view
+    }()
+    
+    private lazy var numCommentsLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 13)
+        view.numberOfLines = 0
+        return view
+    }()
+    
+    private lazy var separator1: SeparatorView = {
+        let view = SeparatorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var separator2: SeparatorView = {
+        let view = SeparatorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    
+    private lazy var commentsStackContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var commentsStack: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .vertical
+        view.distribution = .fillProportionally
+        view.alignment = .fill
+        view.spacing = 10
         return view
     }()
     
@@ -73,6 +134,12 @@ class PhotoDetailViewController: UIViewController {
         return view
     }()
     
+    private var descriptionTopConstraint: NSLayoutConstraint?
+    private var descriptionBottomConstraint: NSLayoutConstraint?
+    
+    private var commentsTopConstraint: NSLayoutConstraint?
+    private var commentsBottomConstraint: NSLayoutConstraint?
+    
     // MARK: - Initialization
     init(model: PhotoCollectionModel) {
         self.viewModel = PhotoDetailViewModel(
@@ -95,6 +162,12 @@ class PhotoDetailViewController: UIViewController {
         self.setUpHeaderLabel()
         self.setUpPhotoImage()
         self.setUpAuthorLabel()
+        self.setUpDescriptionLabel()
+        self.setUpSeparator1()
+        self.setUpStatsStack()
+        self.setUpSeparator2()
+        self.setUpCommentsStackContainer()
+        self.setUpCommentsStack()
         self.setUpCommentsTextView()
         self.setUpSubmit()
     }
@@ -106,6 +179,16 @@ class PhotoDetailViewController: UIViewController {
         guard let url = self.model.photo.mediumPhotoUrl else { return }
         self.photoImageView.load(url: url)
         self.setSubmitBtn(enabled: false)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.viewModel.fetchMetadata(for: self.model.photo)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.viewModel.cancelFetchData()
     }
     
     // MARK: - Functions
@@ -135,7 +218,7 @@ class PhotoDetailViewController: UIViewController {
         self.scrollView.addSubview(self.photoImageView)
         self.photoImageView.topAnchor.constraint(equalTo: self.headerLabel.bottomAnchor, constant: padding).isActive = true
         self.photoImageView.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
-        self.photoImageView.heightAnchor.constraint(equalToConstant: 150).isActive  = true
+        self.photoImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
     private func setUpAuthorLabel(){
@@ -145,12 +228,63 @@ class PhotoDetailViewController: UIViewController {
         self.authorLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
     }
     
+    private func setUpDescriptionLabel(){
+        self.scrollView.addSubview(self.descriptionLabel)
+        self.descriptionTopConstraint =
+            self.descriptionLabel.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: 5)
+        self.descriptionTopConstraint?.isActive = true
+        self.descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.descriptionLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+    }
+    
+    private func setUpSeparator1(){
+        self.scrollView.addSubview(self.separator1)
+        self.descriptionBottomConstraint = self.separator1.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 10)
+        self.descriptionBottomConstraint?.isActive = true
+        self.separator1.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.separator1.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+        self.separator1.heightAnchor.constraint(equalToConstant: 1).isActive  = true
+    }
+    
+    private func setUpStatsStack(){
+        self.scrollView.addSubview(self.statsStack)
+        self.statsStack.topAnchor.constraint(equalTo: self.separator1.bottomAnchor).isActive = true
+        self.statsStack.heightAnchor.constraint(equalToConstant: 30).isActive  = true
+        self.statsStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.statsStack.addArrangedSubview(self.numFavesLabel)
+        self.statsStack.addArrangedSubview(self.numCommentsLabel)
+    }
+    
+    private func setUpSeparator2(){
+        self.scrollView.addSubview(self.separator2)
+        self.separator2.topAnchor.constraint(equalTo: self.statsStack.bottomAnchor).isActive = true
+        self.separator2.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.separator2.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+        self.separator2.heightAnchor.constraint(equalToConstant: 1).isActive  = true
+    }
+    
+    private func setUpCommentsStackContainer(){
+        self.scrollView.addSubview(self.commentsStackContainer)
+        self.commentsTopConstraint = self.commentsStackContainer.topAnchor.constraint(equalTo: self.separator2.bottomAnchor)
+        self.commentsTopConstraint?.isActive = true
+        self.commentsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.commentsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    }
+    
+    private func setUpCommentsStack(){
+        self.commentsStackContainer.addSubview(self.commentsStack)
+        self.commentsStack.topAnchor.constraint(equalTo: self.commentsStackContainer.topAnchor).isActive = true
+        self.commentsStack.leadingAnchor.constraint(equalTo: self.commentsStackContainer.leadingAnchor).isActive = true
+        self.commentsStack.trailingAnchor.constraint(equalTo: self.commentsStackContainer.trailingAnchor).isActive = true
+        self.commentsStack.bottomAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor).isActive = true
+    }
+    
     private func setUpCommentsTextView(){
         self.scrollView.addSubview(self.commentsTextView)
-        self.commentsTextView.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: padding).isActive = true
+        self.commentsTextView.topAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor, constant: padding).isActive = true
         self.commentsTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
         self.commentsTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-        self.commentsTextView.heightAnchor.constraint(equalToConstant: 100).isActive  = true
+        self.commentsTextView.heightAnchor.constraint(equalToConstant: 75).isActive  = true
     }
     
     private func setUpSubmit(){
@@ -178,8 +312,9 @@ extension PhotoDetailViewController: PhotoDetailViewModelDelegate {
         self.displayAlert(with: "Warning", message: reason, actions: [action])
     }
     
-    func onSubmitCompleted() {
+    func onSubmitCompleted(with comment: CommentEntity) {
         self.commentsTextView.text = ""
+        self.addCommentToStack(with: comment)
         let action = UIAlertAction(title: "OK", style: .default)
         self.displayAlert(with: "Success", message: "You've added a comment!", actions: [action])
     }
@@ -187,6 +322,28 @@ extension PhotoDetailViewController: PhotoDetailViewModelDelegate {
     func onSignInFailed() {
         let action = UIAlertAction(title: "OK", style: .default)
         self.displayAlert(with: "Warning", message: "Unable to sign in to Flickr", actions: [action])
+    }
+    
+    func onPhotoMetadataFetchCompleted(with data: PhotoDetailModel) {
+        if data.description.count == 0 {
+            self.descriptionTopConstraint?.constant = 5
+            self.descriptionBottomConstraint?.constant = 0
+        } else {
+            self.descriptionLabel.text = data.description
+        }
+        self.numCommentsLabel.text = "\(data.numOfComments) comments"
+        self.numFavesLabel.text = "\(data.numOfFavorites) faves"
+        
+        guard data.comments.count > 0 else { return }
+        
+        for comment in data.comments {
+            self.addCommentToStack(with: comment)
+        }
+    }
+    
+    func onPhotoMetadataFetchFailed(with reason: String) {
+        let action = UIAlertAction(title: "OK", style: .default)
+        self.displayAlert(with: "Warning", message: "Unable to retrieve photo data", actions: [action])
     }
     
 }
@@ -202,6 +359,17 @@ extension PhotoDetailViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         self.setSubmitBtn(enabled: textView.text.count > 0 && textView.text != commentsPlaceholder)
+    }
+    
+}
+
+// MARK: - Helpers
+private extension PhotoDetailViewController {
+    
+    func addCommentToStack(with comment: CommentEntity) {
+        let commentView = CommentView()
+        commentView.configure(with: comment)
+        self.commentsStack.addArrangedSubview(commentView)
     }
     
 }
