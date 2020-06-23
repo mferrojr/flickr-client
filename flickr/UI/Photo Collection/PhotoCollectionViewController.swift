@@ -78,11 +78,17 @@ class PhotoCollectionViewController: UIViewController {
         self.updateBackgroundText()
     }
     
-    // MARK: - Functions
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.signInOrOutButton.title = Environment.shared.isSignedIn ? "Sign Out" : "Sign In"
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.viewModel.cancelFetchData()
+    }
+    
+    // MARK: - Functions
        
     // MARK: Public
     func photoSelected(of photo: PhotoCollectionModel) {

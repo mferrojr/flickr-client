@@ -12,6 +12,7 @@ enum FlickrServiceError: Error {
     case invalidResponse
     case network
     case cancelled
+    case emptyBody
     
     var reason: String {
         switch self {
@@ -21,6 +22,8 @@ enum FlickrServiceError: Error {
             return "An error occuring retriving data"
         case .cancelled:
             return "Request cancelled"
+        default:
+            return ""
         }
     }
 }
@@ -29,11 +32,21 @@ enum FlickrServiceMethod: String {
     case photosSearch = "flickr.photos.search"
     case addComment = "flickr.photos.comments.addComment"
     case peopleGetInfo = "flickr.people.getInfo"
+    
+    // https://www.flickr.com/services/api/explore/flickr.photos.getInfo
+    case photosGetInfo = "flickr.photos.getInfo"
+    // https://www.flickr.com/services/api/flickr.photos.comments.getList.html
+    case commentsGetList = "flickr.photos.comments.getList"
+    // https://www.flickr.com/services/api/flickr.photos.getFavorites.html
+    case photosGetFavorites = "flickr.photos.getFavorites"
 }
 
 protocol FlickrServicable {
     func searchPhotos(with request: PhotoSearchRequest, page: Int, completion:@escaping (Result<PhotosSearchResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
-    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse?, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func getPhotoInfo(with request: PhotoInfoRequest, completion:@escaping (Result<PhotoInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func getFavorites(with request: GetFavoritesRequest, completion:@escaping (Result<GetFavoritesResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
+    func getComments(with request: GetCommentsRequest, completion:@escaping (Result<GetCommentsResponse, FlickrServiceError>)->Void) -> URLSessionDataTask?
     func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void)
 }
 
@@ -89,7 +102,7 @@ final class FlickrService: FlickrServicable {
         }
     }
     
-    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
+    func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse?, FlickrServiceError>)->Void) -> URLSessionDataTask? {
         var queryItems = self.buildBaseQueryItems(method: .peopleGetInfo)
         queryItems.append(URLQueryItem(name: "user_id", value: request.userId))
         queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
@@ -104,7 +117,108 @@ final class FlickrService: FlickrServicable {
         return self.client.perform(request) { result in
             switch result {
             case .success(let response):
-                guard let response = try? response.decode(to: PeopleInfoResponse.self) else {
+                if response.statusCode == 200 && response.body == nil {
+                     completion(.success(nil))
+                } else {
+                    guard let resp = try? response.decode(to: PeopleInfoResponse.self) else {
+                        completion(.failure(FlickrServiceError.invalidResponse))
+                        return
+                    }
+
+                    completion(.success(resp.body))
+                }
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
+            }
+        }
+    }
+    
+    func getPhotoInfo(with request: PhotoInfoRequest, completion:@escaping (Result<PhotoInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
+        var queryItems = self.buildBaseQueryItems(method: .photosGetInfo)
+        queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
+        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
+        
+        let request = HTTPRequest(
+            method: .get,
+            baseURL: apiBaseURL,
+            path: "",
+            queryItems: queryItems
+        )
+
+        return self.client.perform(request) { result in
+            switch result {
+            case .success(let response):
+                guard let response = try? response.decode(to: PhotoInfoResponse.self) else {
+                    completion(.failure(FlickrServiceError.invalidResponse))
+                    return
+                }
+                
+                completion(.success(response.body))
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
+            }
+        }
+    }
+    
+    func getFavorites(with request: GetFavoritesRequest, completion:@escaping (Result<GetFavoritesResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
+        var queryItems = self.buildBaseQueryItems(method: .photosGetFavorites)
+        queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
+        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
+        
+        let request = HTTPRequest(
+            method: .get,
+            baseURL: apiBaseURL,
+            path: "",
+            queryItems: queryItems
+        )
+
+        return self.client.perform(request) { result in
+            switch result {
+            case .success(let response):
+                guard let response = try? response.decode(to: GetFavoritesResponse.self) else {
+                    completion(.failure(FlickrServiceError.invalidResponse))
+                    return
+                }
+                
+                completion(.success(response.body))
+            case .failure(let error):
+                switch error {
+                case .cancelled:
+                    completion(.failure(FlickrServiceError.cancelled))
+                default:
+                    completion(.failure(FlickrServiceError.network))
+                }
+            }
+        }
+        
+    }
+    
+    func getComments(with request: GetCommentsRequest, completion: @escaping (Result<GetCommentsResponse, FlickrServiceError>) -> Void) -> URLSessionDataTask? {
+        var queryItems = self.buildBaseQueryItems(method: .commentsGetList)
+        queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
+        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
+        
+        let request = HTTPRequest(
+            method: .get,
+            baseURL: apiBaseURL,
+            path: "",
+            queryItems: queryItems
+        )
+
+        return self.client.perform(request) { result in
+            switch result {
+            case .success(let response):
+                guard let response = try? response.decode(to: GetCommentsResponse.self) else {
                     completion(.failure(FlickrServiceError.invalidResponse))
                     return
                 }

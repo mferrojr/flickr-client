@@ -23,8 +23,12 @@ extension PeopleInfoResponse: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        person = try container.decode(PeopleInfoDetailResponse.self, forKey: .person)
+
+        do {
+           person = try container.decode(PeopleInfoDetailResponse.self, forKey: .person)
+        } catch  {
+           throw error
+        }
     }
 
 }

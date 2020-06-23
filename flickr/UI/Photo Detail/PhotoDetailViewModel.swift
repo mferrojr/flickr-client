@@ -10,8 +10,17 @@ import Foundation
 
 protocol PhotoDetailViewModelDelegate: class {
     func onSubmitFailed(with: String)
-    func onSubmitCompleted()
+    func onSubmitCompleted(with comment: CommentEntity)
     func onSignInFailed()
+    func onPhotoMetadataFetchCompleted(with data: PhotoDetailModel)
+    func onPhotoMetadataFetchFailed(with reason: String)
+}
+
+struct PhotoDetailModel {
+    var numOfComments: Int
+    var numOfFavorites: Int
+    var description: String
+    var comments: [CommentEntity]
 }
 
 class PhotoDetailViewModel {
@@ -24,16 +33,35 @@ class PhotoDetailViewModel {
     // MARK: Private
     private var flickrService: FlickrServicable
     private var oauthable: OAuthable
+    private let queue = OperationQueue()
+    private var photoInfoContext: PhotoInfoContext
+    private var getCommentsContext: GetCommentsContext
+    private var getFavortiesContext: GetFavoriteContext
 
     // MARK: - Initialization
-   init(flickrServicable: FlickrServicable, oauthable: OAuthable) {
+    init(flickrServicable: FlickrServicable, oauthable: OAuthable) {
         self.flickrService = flickrServicable
         self.oauthable = oauthable
+        self.photoInfoContext = PhotoInfoContext()
+        self.getCommentsContext = GetCommentsContext()
+        self.getFavortiesContext = GetFavoriteContext()
+        self.queue.qualityOfService = .userInitiated
     }
     
     // MARK: - Functions
     
     // MARK: Public
+    func fetchMetadata(for photo: PhotoEntity) {
+        let photoInfoOp = self.fetchPhotoInfoOperation(by: photo)
+        let getCommentsOp = self.fetchGetCommentsOperation(by: photo)
+        let getFavsOp = self.fetchGetFavoritesOperation(by: photo)
+        let completionOp = self.fetchCompletionBlock()
+        completionOp.addDependency(photoInfoOp)
+        completionOp.addDependency(getCommentsOp)
+        completionOp.addDependency(getFavsOp)
+        queue.addOperation(completionOp)
+    }
+    
     func add(by photoId: String, with comments: String) {
         let request = PhotoCommentsRequest(photoId: photoId, comments: comments)
 
@@ -44,7 +72,78 @@ class PhotoDetailViewModel {
         }
     }
     
+    func cancelFetchData() {
+        self.queue.cancelAllOperations()
+    }
+    
     // MARK: Private
+    private func fetchPhotoInfoOperation(by photo: PhotoEntity) -> Operation {
+        let photoInfoOperation = PhotoInfoOperation(
+            photoId: photo.id,
+            flickrServicable: self.flickrService,
+            context: self.photoInfoContext)
+        photoInfoOperation.errorCallback = { [weak self] _ in
+            self?.handleFlickrServiceError(with: self?.photoInfoContext.error )
+        }
+        queue.addOperation(photoInfoOperation)
+        return photoInfoOperation
+    }
+    
+    private func fetchGetCommentsOperation(by photo: PhotoEntity) -> Operation {
+        let getCommentsOp = GetCommentsOperation(
+            photoId: photo.id,
+            flickrServicable: self.flickrService,
+            context: self.getCommentsContext)
+        getCommentsOp.errorCallback = { [weak self] _ in
+            self?.handleFlickrServiceError(with: self?.getCommentsContext.error )
+        }
+        queue.addOperation(getCommentsOp)
+        return getCommentsOp
+    }
+    
+    private func fetchGetFavoritesOperation(by photo: PhotoEntity) -> Operation {
+        let getFavoritesOp = GetFavoritesOperation(
+            photoId: photo.id,
+            flickrServicable: self.flickrService,
+            context: self.getFavortiesContext)
+        getFavoritesOp.errorCallback = { [weak self] _ in
+            self?.handleFlickrServiceError(with: self?.getFavortiesContext.error )
+        }
+        queue.addOperation(getFavoritesOp)
+        return getFavoritesOp
+    }
+    
+    private func fetchCompletionBlock() -> Operation {
+        let completionOperation = Operation()
+        completionOperation.completionBlock = { [weak self] in
+            if let error = self?.getFavortiesContext.error {
+                self?.handleFlickrServiceError(with: error)
+                return
+            }
+            
+            if let error = self?.getCommentsContext.error {
+                self?.handleFlickrServiceError(with: error)
+                return
+            }
+            
+            if let error = self?.photoInfoContext.error {
+                self?.handleFlickrServiceError(with: error)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let model = PhotoDetailModel(
+                    numOfComments: self?.photoInfoContext.comments ?? 0,
+                    numOfFavorites: self?.getFavortiesContext.total ?? 0,
+                    description: self?.photoInfoContext.description ?? "",
+                    comments: self?.getCommentsContext.comments ?? [])
+                self?.delegate?.onPhotoMetadataFetchCompleted(with: model)
+            }
+        }
+        
+        return completionOperation
+    }
+    
     private func handleOAuth(with request: PhotoCommentsRequest) {
         self.oauthable.doOAuth { [weak self] result in
             switch result {
@@ -65,10 +164,25 @@ class PhotoDetailViewModel {
                 }
             case .success:
                 DispatchQueue.main.async {
-                    self.delegate?.onSubmitCompleted()
+                    self.delegate?.onSubmitCompleted(with:
+                        CommentEntity(id: "", authorname: "Me", content: request.comments)
+                    )
                 }
             }
         })
+    }
+    
+    private func handleFlickrServiceError(with error: FlickrServiceError?) {
+        guard let error = error else { return }
+        DispatchQueue.main.async { [weak self] in
+           switch error {
+           case .cancelled:
+               break
+           default:
+                self?.cancelFetchData()
+                self?.delegate?.onPhotoMetadataFetchFailed(with: error.reason)
+           }
+        }
     }
     
 }

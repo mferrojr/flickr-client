@@ -34,7 +34,12 @@ extension PhotosSearchMetaResponse: Decodable {
         pages = try container.decode(Int.self, forKey: .pages)
         perpage = try container.decode(Int.self, forKey: .perpage)
         total = try Int(container.decode(String.self, forKey: .total)) ?? 0
-        photos = try container.decode([PhotoMetaResponse].self, forKey: .photo)
+
+        do {
+           photos = try container.decode([PhotoMetaResponse].self, forKey: .photo)
+        } catch {
+           photos = [PhotoMetaResponse]()
+        }
     }
 
 }

@@ -52,6 +52,24 @@
 		74C275D524A0D1D500A53FD8 /* BaseOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C275D424A0D1D500A53FD8 /* BaseOperation.swift */; };
 		74C275D724A0D38400A53FD8 /* PersonEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C275D624A0D38400A53FD8 /* PersonEntity.swift */; };
 		74C275D924A0D75100A53FD8 /* PeopleInfoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C275D824A0D75100A53FD8 /* PeopleInfoOperation.swift */; };
+		74D85A8924A2206400904F4B /* PhotoInfoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A8824A2206400904F4B /* PhotoInfoRequest.swift */; };
+		74D85A8B24A2209700904F4B /* PhotoInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A8A24A2209700904F4B /* PhotoInfoResponse.swift */; };
+		74D85A8D24A2211A00904F4B /* PhotoInfoMetaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A8C24A2211A00904F4B /* PhotoInfoMetaResponse.swift */; };
+		74D85A8F24A2214800904F4B /* PhotoInfoMetaCommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A8E24A2214800904F4B /* PhotoInfoMetaCommentResponse.swift */; };
+		74D85A9124A223B300904F4B /* PhotoInfoMetaDescriptionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9024A223B300904F4B /* PhotoInfoMetaDescriptionResponse.swift */; };
+		74D85A9324A2264400904F4B /* GetFavoritesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9224A2264400904F4B /* GetFavoritesRequest.swift */; };
+		74D85A9524A2266C00904F4B /* GetFavoritesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9424A2266C00904F4B /* GetFavoritesResponse.swift */; };
+		74D85A9724A226E400904F4B /* GetFavoritesPhotoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9624A226E400904F4B /* GetFavoritesPhotoResponse.swift */; };
+		74D85A9924A227A300904F4B /* GetCommentsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9824A227A300904F4B /* GetCommentsRequest.swift */; };
+		74D85A9B24A227C900904F4B /* GetCommentsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9A24A227C900904F4B /* GetCommentsResponse.swift */; };
+		74D85A9D24A2288000904F4B /* GetCommentsMetaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9C24A2288000904F4B /* GetCommentsMetaResponse.swift */; };
+		74D85A9F24A228B600904F4B /* GetCommentsMetaInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85A9E24A228B600904F4B /* GetCommentsMetaInfoResponse.swift */; };
+		74D85AA124A230AB00904F4B /* PhotoInfoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AA024A230AB00904F4B /* PhotoInfoOperation.swift */; };
+		74D85AA324A231D400904F4B /* GetCommentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AA224A231D400904F4B /* GetCommentsOperation.swift */; };
+		74D85AA524A2324400904F4B /* CommentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AA424A2324400904F4B /* CommentEntity.swift */; };
+		74D85AA724A2374D00904F4B /* GetFavoritesOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AA624A2374D00904F4B /* GetFavoritesOperation.swift */; };
+		74D85AAC24A26A6C00904F4B /* CommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AAB24A26A6C00904F4B /* CommentView.swift */; };
+		74D85AAE24A27E5600904F4B /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D85AAD24A27E5600904F4B /* SeparatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +140,24 @@
 		74C275D424A0D1D500A53FD8 /* BaseOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOperation.swift; sourceTree = "<group>"; };
 		74C275D624A0D38400A53FD8 /* PersonEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEntity.swift; sourceTree = "<group>"; };
 		74C275D824A0D75100A53FD8 /* PeopleInfoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleInfoOperation.swift; sourceTree = "<group>"; };
+		74D85A8824A2206400904F4B /* PhotoInfoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoRequest.swift; sourceTree = "<group>"; };
+		74D85A8A24A2209700904F4B /* PhotoInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoResponse.swift; sourceTree = "<group>"; };
+		74D85A8C24A2211A00904F4B /* PhotoInfoMetaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoMetaResponse.swift; sourceTree = "<group>"; };
+		74D85A8E24A2214800904F4B /* PhotoInfoMetaCommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoMetaCommentResponse.swift; sourceTree = "<group>"; };
+		74D85A9024A223B300904F4B /* PhotoInfoMetaDescriptionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoMetaDescriptionResponse.swift; sourceTree = "<group>"; };
+		74D85A9224A2264400904F4B /* GetFavoritesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesRequest.swift; sourceTree = "<group>"; };
+		74D85A9424A2266C00904F4B /* GetFavoritesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesResponse.swift; sourceTree = "<group>"; };
+		74D85A9624A226E400904F4B /* GetFavoritesPhotoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesPhotoResponse.swift; sourceTree = "<group>"; };
+		74D85A9824A227A300904F4B /* GetCommentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCommentsRequest.swift; sourceTree = "<group>"; };
+		74D85A9A24A227C900904F4B /* GetCommentsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCommentsResponse.swift; sourceTree = "<group>"; };
+		74D85A9C24A2288000904F4B /* GetCommentsMetaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCommentsMetaResponse.swift; sourceTree = "<group>"; };
+		74D85A9E24A228B600904F4B /* GetCommentsMetaInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCommentsMetaInfoResponse.swift; sourceTree = "<group>"; };
+		74D85AA024A230AB00904F4B /* PhotoInfoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoOperation.swift; sourceTree = "<group>"; };
+		74D85AA224A231D400904F4B /* GetCommentsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCommentsOperation.swift; sourceTree = "<group>"; };
+		74D85AA424A2324400904F4B /* CommentEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentEntity.swift; sourceTree = "<group>"; };
+		74D85AA624A2374D00904F4B /* GetFavoritesOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesOperation.swift; sourceTree = "<group>"; };
+		74D85AAB24A26A6C00904F4B /* CommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentView.swift; sourceTree = "<group>"; };
+		74D85AAD24A27E5600904F4B /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +287,7 @@
 		749922C4249D80A000F4E75F /* Photo Detail */ = {
 			isa = PBXGroup;
 			children = (
+				74D85AAA24A269B100904F4B /* Views */,
 				749922D6249D963D00F4E75F /* PhotoDetailViewController.swift */,
 				749922D8249D96D900F4E75F /* PhotoDetailViewModel.swift */,
 			);
@@ -299,6 +336,7 @@
 		749922E9249E68E700F4E75F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				74D85AA424A2324400904F4B /* CommentEntity.swift */,
 				74992296249D4BCC00F4E75F /* flickr.xcdatamodeld */,
 				74C275D624A0D38400A53FD8 /* PersonEntity.swift */,
 				74992301249E960900F4E75F /* PhotoEntity.swift */,
@@ -328,11 +366,23 @@
 		749922F0249E7FA200F4E75F /* Photos */ = {
 			isa = PBXGroup;
 			children = (
+				74D85A9E24A228B600904F4B /* GetCommentsMetaInfoResponse.swift */,
+				74D85A9C24A2288000904F4B /* GetCommentsMetaResponse.swift */,
+				74D85A9824A227A300904F4B /* GetCommentsRequest.swift */,
+				74D85A9A24A227C900904F4B /* GetCommentsResponse.swift */,
+				74D85A9624A226E400904F4B /* GetFavoritesPhotoResponse.swift */,
+				74D85A9224A2264400904F4B /* GetFavoritesRequest.swift */,
+				74D85A9424A2266C00904F4B /* GetFavoritesResponse.swift */,
+				7499231F249FF9FD00F4E75F /* PhotoCommentsRequest.swift */,
+				74D85A8E24A2214800904F4B /* PhotoInfoMetaCommentResponse.swift */,
+				74D85A9024A223B300904F4B /* PhotoInfoMetaDescriptionResponse.swift */,
+				74D85A8C24A2211A00904F4B /* PhotoInfoMetaResponse.swift */,
+				74D85A8824A2206400904F4B /* PhotoInfoRequest.swift */,
+				74D85A8A24A2209700904F4B /* PhotoInfoResponse.swift */,
 				749922DE249D9B7800F4E75F /* PhotoMetaResponse.swift */,
 				749922E0249D9E4200F4E75F /* PhotosSearchMetaResponse.swift */,
 				749922FD249E904600F4E75F /* PhotosSearchRequest.swift */,
 				749922DB249D9A6600F4E75F /* PhotosSearchResponse.swift */,
-				7499231F249FF9FD00F4E75F /* PhotoCommentsRequest.swift */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -365,6 +415,7 @@
 			isa = PBXGroup;
 			children = (
 				74992313249FAE5400F4E75F /* FlickrImageView.swift */,
+				74D85AAD24A27E5600904F4B /* SeparatorView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -384,10 +435,21 @@
 			isa = PBXGroup;
 			children = (
 				74C275D424A0D1D500A53FD8 /* BaseOperation.swift */,
+				74D85AA224A231D400904F4B /* GetCommentsOperation.swift */,
 				74C275D824A0D75100A53FD8 /* PeopleInfoOperation.swift */,
+				74D85AA024A230AB00904F4B /* PhotoInfoOperation.swift */,
 				74C275D224A0D16900A53FD8 /* SearchPhotosOperation.swift */,
+				74D85AA624A2374D00904F4B /* GetFavoritesOperation.swift */,
 			);
 			path = Operations;
+			sourceTree = "<group>";
+		};
+		74D85AAA24A269B100904F4B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				74D85AAB24A26A6C00904F4B /* CommentView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -554,24 +616,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				749922CB249D810B00F4E75F /* RootMasterCoordinator.swift in Sources */,
+				74D85A8D24A2211A00904F4B /* PhotoInfoMetaResponse.swift in Sources */,
+				74D85A9924A227A300904F4B /* GetCommentsRequest.swift in Sources */,
 				7499232224A007A700F4E75F /* Environment.swift in Sources */,
+				74D85AA324A231D400904F4B /* GetCommentsOperation.swift in Sources */,
 				749922CD249D811F00F4E75F /* MainCoordinator.swift in Sources */,
+				74D85A9324A2264400904F4B /* GetFavoritesRequest.swift in Sources */,
 				749922FC249E83ED00F4E75F /* FlickrSecrets.swift in Sources */,
 				74C275D924A0D75100A53FD8 /* PeopleInfoOperation.swift in Sources */,
 				749922E5249E5BA700F4E75F /* FlickrService.swift in Sources */,
+				74D85AAE24A27E5600904F4B /* SeparatorView.swift in Sources */,
 				749922C9249D80E800F4E75F /* AppCoordinator.swift in Sources */,
+				74D85A8F24A2214800904F4B /* PhotoInfoMetaCommentResponse.swift in Sources */,
 				74C275D724A0D38400A53FD8 /* PersonEntity.swift in Sources */,
 				74C275D524A0D1D500A53FD8 /* BaseOperation.swift in Sources */,
+				74D85A9724A226E400904F4B /* GetFavoritesPhotoResponse.swift in Sources */,
 				74992308249EA9BC00F4E75F /* PhotoCollectionTableViewCell.swift in Sources */,
 				7499231E249FD4B800F4E75F /* OAuth.swift in Sources */,
 				749922D9249D96D900F4E75F /* PhotoDetailViewModel.swift in Sources */,
+				74D85A9D24A2288000904F4B /* GetCommentsMetaResponse.swift in Sources */,
+				74D85A9124A223B300904F4B /* PhotoInfoMetaDescriptionResponse.swift in Sources */,
 				749922FE249E904600F4E75F /* PhotosSearchRequest.swift in Sources */,
 				749922D1249D8FA300F4E75F /* PhotoCollectionTable.swift in Sources */,
+				74D85AA724A2374D00904F4B /* GetFavoritesOperation.swift in Sources */,
 				74C275CA24A0CA9700A53FD8 /* PeopleInfoRequest.swift in Sources */,
+				74D85A8B24A2209700904F4B /* PhotoInfoResponse.swift in Sources */,
+				74D85AA124A230AB00904F4B /* PhotoInfoOperation.swift in Sources */,
 				749922D7249D963D00F4E75F /* PhotoDetailViewController.swift in Sources */,
 				74C275CC24A0CB3500A53FD8 /* PeopleInfoResponse.swift in Sources */,
 				749922DF249D9B7800F4E75F /* PhotoMetaResponse.swift in Sources */,
 				74992320249FF9FD00F4E75F /* PhotoCommentsRequest.swift in Sources */,
+				74D85A9524A2266C00904F4B /* GetFavoritesResponse.swift in Sources */,
+				74D85A8924A2206400904F4B /* PhotoInfoRequest.swift in Sources */,
 				74C275D324A0D16900A53FD8 /* SearchPhotosOperation.swift in Sources */,
 				749922EF249E7EBA00F4E75F /* Services.swift in Sources */,
 				7499230B249ED74F00F4E75F /* ImageLoader.swift in Sources */,
@@ -585,11 +661,15 @@
 				74992302249E960900F4E75F /* PhotoEntity.swift in Sources */,
 				74992298249D4BCC00F4E75F /* flickr.xcdatamodeld in Sources */,
 				74992314249FAE5400F4E75F /* FlickrImageView.swift in Sources */,
+				74D85A9B24A227C900904F4B /* GetCommentsResponse.swift in Sources */,
+				74D85AA524A2324400904F4B /* CommentEntity.swift in Sources */,
 				74992305249EA73F00F4E75F /* UIViewController+Extensions.swift in Sources */,
 				749922E3249DA0AA00F4E75F /* HTTPRequest.swift in Sources */,
 				74992290249D4BCC00F4E75F /* SceneDelegate.swift in Sources */,
 				749922E7249E5FB700F4E75F /* HTTPClient.swift in Sources */,
 				749922E1249D9E4200F4E75F /* PhotosSearchMetaResponse.swift in Sources */,
+				74D85A9F24A228B600904F4B /* GetCommentsMetaInfoResponse.swift in Sources */,
+				74D85AAC24A26A6C00904F4B /* CommentView.swift in Sources */,
 				7499230D249ED77A00F4E75F /* ImageCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
