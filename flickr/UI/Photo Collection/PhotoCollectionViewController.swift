@@ -80,7 +80,7 @@ class PhotoCollectionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.signInOrOutButton.title = Environment.shared.isSignedIn ? "Sign Out" : "Sign In"
+        self.signInOrOutButton.title = Environment.shared.signedInUser != nil ? "Sign Out" : "Sign In"
     }
     
     override func viewWillDisappear(_ animated: Bool) {

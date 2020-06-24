@@ -18,9 +18,18 @@ class PhotoDetailViewController: UIViewController {
     // MARK: Private
     private var viewModel: PhotoDetailViewModel
     private var model: PhotoCollectionModel
+    
+    // MARK: Constants
     private let padding: CGFloat = 20
     private let commentsPlaceholder = "Add a Comment"
     
+    // MARK: Constraints
+    private var descriptionTopConstraint: NSLayoutConstraint?
+    private var descriptionBottomConstraint: NSLayoutConstraint?
+    private var commentsTopConstraint: NSLayoutConstraint?
+    private var commentsBottomConstraint: NSLayoutConstraint?
+    
+    // MARK: UI Elements
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -61,11 +70,18 @@ class PhotoDetailViewController: UIViewController {
         return view
     }()
     
+    private lazy var statsStackContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var statsStack: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .horizontal
         view.distribution = .fillProportionally
+        view.spacing = 5
         return view
     }()
     
@@ -73,7 +89,7 @@ class PhotoDetailViewController: UIViewController {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = .systemFont(ofSize: 13)
-        view.numberOfLines = 0
+        view.numberOfLines = 1
         return view
     }()
     
@@ -81,7 +97,7 @@ class PhotoDetailViewController: UIViewController {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = .systemFont(ofSize: 13)
-        view.numberOfLines = 0
+        view.numberOfLines = 1
         return view
     }()
     
@@ -134,12 +150,6 @@ class PhotoDetailViewController: UIViewController {
         return view
     }()
     
-    private var descriptionTopConstraint: NSLayoutConstraint?
-    private var descriptionBottomConstraint: NSLayoutConstraint?
-    
-    private var commentsTopConstraint: NSLayoutConstraint?
-    private var commentsBottomConstraint: NSLayoutConstraint?
-    
     // MARK: - Initialization
     init(model: PhotoCollectionModel) {
         self.viewModel = PhotoDetailViewModel(
@@ -164,6 +174,7 @@ class PhotoDetailViewController: UIViewController {
         self.setUpAuthorLabel()
         self.setUpDescriptionLabel()
         self.setUpSeparator1()
+        self.setUpStatsStackContainer()
         self.setUpStatsStack()
         self.setUpSeparator2()
         self.setUpCommentsStackContainer()
@@ -246,10 +257,18 @@ class PhotoDetailViewController: UIViewController {
         self.separator1.heightAnchor.constraint(equalToConstant: 1).isActive  = true
     }
     
+    private func setUpStatsStackContainer() {
+        self.scrollView.addSubview(self.statsStackContainer)
+        self.statsStackContainer.topAnchor.constraint(equalTo: self.separator1.bottomAnchor).isActive = true
+        self.statsStackContainer.heightAnchor.constraint(equalToConstant: 30).isActive  = true
+        self.statsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.statsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    }
+    
     private func setUpStatsStack(){
-        self.scrollView.addSubview(self.statsStack)
-        self.statsStack.topAnchor.constraint(equalTo: self.separator1.bottomAnchor).isActive = true
-        self.statsStack.heightAnchor.constraint(equalToConstant: 30).isActive  = true
+        self.statsStackContainer.addSubview(self.statsStack)
+        self.statsStack.topAnchor.constraint(equalTo: self.statsStackContainer.topAnchor).isActive = true
+        self.statsStack.bottomAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
         self.statsStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         self.statsStack.addArrangedSubview(self.numFavesLabel)
         self.statsStack.addArrangedSubview(self.numCommentsLabel)
@@ -257,7 +276,7 @@ class PhotoDetailViewController: UIViewController {
     
     private func setUpSeparator2(){
         self.scrollView.addSubview(self.separator2)
-        self.separator2.topAnchor.constraint(equalTo: self.statsStack.bottomAnchor).isActive = true
+        self.separator2.topAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
         self.separator2.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
         self.separator2.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
         self.separator2.heightAnchor.constraint(equalToConstant: 1).isActive  = true
@@ -315,6 +334,7 @@ extension PhotoDetailViewController: PhotoDetailViewModelDelegate {
     func onSubmitCompleted(with comment: CommentEntity) {
         self.commentsTextView.text = ""
         self.addCommentToStack(with: comment)
+        self.setCommentsCount()
         let action = UIAlertAction(title: "OK", style: .default)
         self.displayAlert(with: "Success", message: "You've added a comment!", actions: [action])
     }
@@ -331,14 +351,14 @@ extension PhotoDetailViewController: PhotoDetailViewModelDelegate {
         } else {
             self.descriptionLabel.text = data.description
         }
-        self.numCommentsLabel.text = "\(data.numOfComments) comments"
-        self.numFavesLabel.text = "\(data.numOfFavorites) faves"
         
-        guard data.comments.count > 0 else { return }
+        self.numFavesLabel.text = "\(data.numOfFavorites) faves"
         
         for comment in data.comments {
             self.addCommentToStack(with: comment)
         }
+        
+        self.setCommentsCount()
     }
     
     func onPhotoMetadataFetchFailed(with reason: String) {
@@ -370,6 +390,10 @@ private extension PhotoDetailViewController {
         let commentView = CommentView()
         commentView.configure(with: comment)
         self.commentsStack.addArrangedSubview(commentView)
+    }
+    
+    func setCommentsCount() {
+        self.numCommentsLabel.text = "\(self.commentsStack.arrangedSubviews.count) comments"
     }
     
 }

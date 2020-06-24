@@ -112,8 +112,7 @@ class PhotoCollectionViewModel {
     }
     
     func signInOrOut() {
-        if Environment.shared.isSignedIn {
-            Environment.shared.isSignedIn = false
+        if Environment.shared.signedInUser != nil {
             self.oauthable.logout()
             self.delegate?.onSignOutCompleted()
         } else {

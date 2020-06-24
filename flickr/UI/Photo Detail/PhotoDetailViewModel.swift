@@ -65,7 +65,7 @@ class PhotoDetailViewModel {
     func add(by photoId: String, with comments: String) {
         let request = PhotoCommentsRequest(photoId: photoId, comments: comments)
 
-        if Environment.shared.isSignedIn {
+        if Environment.shared.signedInUser != nil {
             self.handleAddingComment(with: request)
         } else {
             self.handleOAuth(with: request)
@@ -165,7 +165,11 @@ class PhotoDetailViewModel {
             case .success:
                 DispatchQueue.main.async {
                     self.delegate?.onSubmitCompleted(with:
-                        CommentEntity(id: "", authorname: "Me", content: request.comments)
+                        CommentEntity(
+                            id: Environment.shared.signedInUser?.id ?? "",
+                            authorname: Environment.shared.signedInUser?.userName ?? "Me",
+                            content: request.comments
+                        )
                     )
                 }
             }
