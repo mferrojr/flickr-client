@@ -9,6 +9,11 @@
 import Foundation
 
 struct Environment {
-    var isSignedIn:Bool
-    static var shared = Environment(isSignedIn: false)
+    
+    // MARK: - Variables
+    
+    // MARK: Public
+    static var shared = Environment()
+    
+    var signedInUser: PersonEntity?
 }

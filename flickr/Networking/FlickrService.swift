@@ -12,7 +12,6 @@ enum FlickrServiceError: Error {
     case invalidResponse
     case network
     case cancelled
-    case emptyBody
     
     var reason: String {
         switch self {
@@ -22,23 +21,8 @@ enum FlickrServiceError: Error {
             return "An error occuring retriving data"
         case .cancelled:
             return "Request cancelled"
-        default:
-            return ""
         }
     }
-}
-
-enum FlickrServiceMethod: String {
-    case photosSearch = "flickr.photos.search"
-    case addComment = "flickr.photos.comments.addComment"
-    case peopleGetInfo = "flickr.people.getInfo"
-    
-    // https://www.flickr.com/services/api/explore/flickr.photos.getInfo
-    case photosGetInfo = "flickr.photos.getInfo"
-    // https://www.flickr.com/services/api/flickr.photos.comments.getList.html
-    case commentsGetList = "flickr.photos.comments.getList"
-    // https://www.flickr.com/services/api/flickr.photos.getFavorites.html
-    case photosGetFavorites = "flickr.photos.getFavorites"
 }
 
 protocol FlickrServicable {
@@ -54,11 +38,27 @@ final class FlickrService: FlickrServicable {
 
     // MARK: - Variables
     
+    // MARK: Public
+    enum Method: String {
+        case photosSearch = "flickr.photos.search"
+        case addComment = "flickr.photos.comments.addComment"
+        case peopleGetInfo = "flickr.people.getInfo"
+        
+        // https://www.flickr.com/services/api/explore/flickr.photos.getInfo
+        case photosGetInfo = "flickr.photos.getInfo"
+        // https://www.flickr.com/services/api/flickr.photos.comments.getList.html
+        case commentsGetList = "flickr.photos.comments.getList"
+        // https://www.flickr.com/services/api/flickr.photos.getFavorites.html
+        case photosGetFavorites = "flickr.photos.getFavorites"
+        // https://www.flickr.com/services/api/flickr.auth.oauth.checkToken.htm
+        case checkToken = "flickr.auth.oauth.checkToken"
+    }
+    
+    static let apiBaseURL = URL(string: "https://api.flickr.com/services/rest/")!
+    
     // MARK: Private
     private var client: HTTPClientable
     private var oauth: OAuthable
-
-    private let apiBaseURL = URL(string: "https://api.flickr.com/services/rest/")!
     
     // MARK: - Initialization
     init(client: HTTPClientable, oauthable: OAuthable) {
@@ -70,14 +70,13 @@ final class FlickrService: FlickrServicable {
     
     // MARK: Public
     func searchPhotos(with request: PhotoSearchRequest, page: Int, completion:@escaping (Result<PhotosSearchResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        var queryItems = self.buildBaseQueryItems(method: .photosSearch)
+        var queryItems = self.buildBaseQueryItems(method: .photosSearch, withApiKey: true)
         queryItems.append(URLQueryItem(name: "tags", value: request.tag))
         queryItems.append(URLQueryItem(name: "page", value: String(page)))
-        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
-            baseURL: apiBaseURL,
+            baseURL: FlickrService.apiBaseURL,
             path: "",
             queryItems: queryItems
         )
@@ -103,13 +102,12 @@ final class FlickrService: FlickrServicable {
     }
     
     func getPeopleInfo(with request: PeopleInfoRequest, completion:@escaping (Result<PeopleInfoResponse?, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        var queryItems = self.buildBaseQueryItems(method: .peopleGetInfo)
+        var queryItems = self.buildBaseQueryItems(method: .peopleGetInfo, withApiKey: true)
         queryItems.append(URLQueryItem(name: "user_id", value: request.userId))
-        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
-            baseURL: apiBaseURL,
+            baseURL: FlickrService.apiBaseURL,
             path: "",
             queryItems: queryItems
         )
@@ -139,13 +137,12 @@ final class FlickrService: FlickrServicable {
     }
     
     func getPhotoInfo(with request: PhotoInfoRequest, completion:@escaping (Result<PhotoInfoResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        var queryItems = self.buildBaseQueryItems(method: .photosGetInfo)
+        var queryItems = self.buildBaseQueryItems(method: .photosGetInfo, withApiKey: true)
         queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
-        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
-            baseURL: apiBaseURL,
+            baseURL: Self.apiBaseURL,
             path: "",
             queryItems: queryItems
         )
@@ -171,13 +168,12 @@ final class FlickrService: FlickrServicable {
     }
     
     func getFavorites(with request: GetFavoritesRequest, completion:@escaping (Result<GetFavoritesResponse, FlickrServiceError>)->Void) -> URLSessionDataTask? {
-        var queryItems = self.buildBaseQueryItems(method: .photosGetFavorites)
+        var queryItems = self.buildBaseQueryItems(method: .photosGetFavorites, withApiKey: true)
         queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
-        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
-            baseURL: apiBaseURL,
+            baseURL: Self.apiBaseURL,
             path: "",
             queryItems: queryItems
         )
@@ -204,13 +200,12 @@ final class FlickrService: FlickrServicable {
     }
     
     func getComments(with request: GetCommentsRequest, completion: @escaping (Result<GetCommentsResponse, FlickrServiceError>) -> Void) -> URLSessionDataTask? {
-        var queryItems = self.buildBaseQueryItems(method: .commentsGetList)
+        var queryItems = self.buildBaseQueryItems(method: .commentsGetList, withApiKey: true)
         queryItems.append(URLQueryItem(name: "photo_id", value: request.photoId))
-        queryItems.append(URLQueryItem(name: "api_key", value: FlickrSecrets.FlickrApiKey))
         
         let request = HTTPRequest(
             method: .get,
-            baseURL: apiBaseURL,
+            baseURL: Self.apiBaseURL,
             path: "",
             queryItems: queryItems
         )
@@ -236,11 +231,11 @@ final class FlickrService: FlickrServicable {
     }
     
     func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void) {
-        var parameters = self.buildBaseDictionary(method: .addComment)
+        var parameters = Self.buildBaseDictionary(method: .addComment)
         parameters["photo_id"] = request.photoId
         parameters["comment_text"] = request.comments
         
-        self.oauth.post(to: self.apiBaseURL, with: parameters, completion: { result in
+        self.oauth.post(to: FlickrService.apiBaseURL, with: parameters, completion: { result in
             switch result {
             case .success:
                 completion(.success(()))
@@ -250,17 +245,22 @@ final class FlickrService: FlickrServicable {
         })
     }
     
-    // MARK: Private
-    private func buildBaseDictionary(method: FlickrServiceMethod) -> [String:String] {
-        return [
+    static func buildBaseDictionary(method: FlickrService.Method, withApiKey: Bool = false) -> [String:String] {
+        var dict = [
             "method": method.rawValue,
             "format": "json",
             "nojsoncallback": "1"
         ]
+        
+        if withApiKey {
+            dict["api_key"] =  FlickrSecrets.FlickrApiKey
+        }
+        return dict
     }
     
-    private func buildBaseQueryItems(method: FlickrServiceMethod) -> [URLQueryItem] {
-        return self.buildBaseDictionary(method: method).map{ URLQueryItem(name: $0, value: $1) }
+    // MARK: Private
+    private func buildBaseQueryItems(method: FlickrService.Method, withApiKey: Bool = false) -> [URLQueryItem] {
+        return Self.buildBaseDictionary(method: method, withApiKey: withApiKey).map{ URLQueryItem(name: $0, value: $1) }
     }
 
 }
