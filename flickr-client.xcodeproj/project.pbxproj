@@ -283,8 +283,8 @@
 			isa = PBXGroup;
 			children = (
 				749922EA249E6D7B00F4E75F /* Views */,
-				749922CE249D8F1100F4E75F /* PhotoCollectionViewController.swift */,
 				749922D0249D8FA300F4E75F /* PhotoCollectionTable.swift */,
+				749922CE249D8F1100F4E75F /* PhotoCollectionViewController.swift */,
 				749922D2249D8FFC00F4E75F /* PhotoCollectionViewModel.swift */,
 			);
 			path = "Photo Collection";

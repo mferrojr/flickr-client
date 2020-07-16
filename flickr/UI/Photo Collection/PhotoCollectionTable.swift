@@ -72,18 +72,18 @@ extension PhotoCollectionTable: UITableViewDataSource {
         return self.viewModel.totalCount
     }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: PhotoCollectionTableViewCell.ReuseId, for: indexPath) as? PhotoCollectionTableViewCell else {
-        fatalError("Dequeued cell is not the expected type.")
-    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PhotoCollectionTableViewCell.ReuseId, for: indexPath) as? PhotoCollectionTableViewCell else {
+            fatalError("Dequeued cell is not the expected type.")
+        }
 
-    if self.viewModel.isLoadingCell(for: indexPath) {
-        cell.configure(with: .none, at: indexPath)
-    } else {
-        cell.configure(with: viewModel.entity(at: indexPath.row), at: indexPath)
+        if self.viewModel.isLoadingCell(for: indexPath) {
+            cell.configure(with: .none, at: indexPath)
+        } else {
+            cell.configure(with: viewModel.entity(at: indexPath.row), at: indexPath)
+        }
+
+        return cell
     }
-    
-    return cell
-  }
     
 }
