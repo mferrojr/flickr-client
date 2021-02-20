@@ -34,7 +34,7 @@ protocol FlickrServicable {
     func addComment(with request: PhotoCommentsRequest, completion:@escaping (Result<Void, FlickrServiceError>)->Void)
 }
 
-final class FlickrService: FlickrServicable {
+struct FlickrService: FlickrServicable {
 
     // MARK: - Variables
     
@@ -258,9 +258,13 @@ final class FlickrService: FlickrServicable {
         return dict
     }
     
-    // MARK: Private
-    private func buildBaseQueryItems(method: FlickrService.Method, withApiKey: Bool = false) -> [URLQueryItem] {
+}
+
+// MARK: - Private Functions
+private extension FlickrService {
+    
+    func buildBaseQueryItems(method: FlickrService.Method, withApiKey: Bool = false) -> [URLQueryItem] {
         return Self.buildBaseDictionary(method: method, withApiKey: withApiKey).map{ URLQueryItem(name: $0, value: $1) }
     }
-
+    
 }

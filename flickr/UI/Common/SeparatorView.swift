@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SeparatorView: UIView {
+final class SeparatorView: UIView {
     
     // MARK: - Variables
     
@@ -34,12 +34,17 @@ class SeparatorView: UIView {
     
     // MARK: - Functions
     
-    // MARK: Private
-    private func setup() {
+}
+
+// MARK: - Private Functions
+private extension SeparatorView {
+  
+    func setup() {
         self.addSubview(self.separaterView)
         self.separaterView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         self.separaterView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         self.separaterView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         self.separaterView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
+    
 }

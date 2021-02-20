@@ -14,5 +14,4 @@ class Services {
     static let oauth: OAuthable = OAuth()
     static let flickrService: FlickrServicable = FlickrService(client: httpClient, oauthable: oauth)
     
-    
 }

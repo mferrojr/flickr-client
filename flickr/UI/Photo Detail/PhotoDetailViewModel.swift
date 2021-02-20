@@ -23,7 +23,7 @@ struct PhotoDetailModel {
     var comments: [CommentEntity]
 }
 
-class PhotoDetailViewModel {
+final class PhotoDetailViewModel {
 
     // MARK: - Variables
 
@@ -76,8 +76,12 @@ class PhotoDetailViewModel {
         self.queue.cancelAllOperations()
     }
     
-    // MARK: Private
-    private func fetchPhotoInfoOperation(by photo: PhotoEntity) -> Operation {
+}
+
+// MARK: - Private Functions
+private extension PhotoDetailViewModel {
+
+    func fetchPhotoInfoOperation(by photo: PhotoEntity) -> Operation {
         let photoInfoOperation = PhotoInfoOperation(
             photoId: photo.id,
             flickrServicable: self.flickrService,
@@ -89,7 +93,7 @@ class PhotoDetailViewModel {
         return photoInfoOperation
     }
     
-    private func fetchGetCommentsOperation(by photo: PhotoEntity) -> Operation {
+    func fetchGetCommentsOperation(by photo: PhotoEntity) -> Operation {
         let getCommentsOp = GetCommentsOperation(
             photoId: photo.id,
             flickrServicable: self.flickrService,
@@ -101,7 +105,7 @@ class PhotoDetailViewModel {
         return getCommentsOp
     }
     
-    private func fetchGetFavoritesOperation(by photo: PhotoEntity) -> Operation {
+    func fetchGetFavoritesOperation(by photo: PhotoEntity) -> Operation {
         let getFavoritesOp = GetFavoritesOperation(
             photoId: photo.id,
             flickrServicable: self.flickrService,
@@ -113,7 +117,7 @@ class PhotoDetailViewModel {
         return getFavoritesOp
     }
     
-    private func fetchCompletionBlock() -> Operation {
+    func fetchCompletionBlock() -> Operation {
         let completionOperation = Operation()
         completionOperation.completionBlock = { [weak self] in
             if let error = self?.getFavortiesContext.error {
@@ -144,7 +148,7 @@ class PhotoDetailViewModel {
         return completionOperation
     }
     
-    private func handleOAuth(with request: PhotoCommentsRequest) {
+    func handleOAuth(with request: PhotoCommentsRequest) {
         self.oauthable.doOAuth { [weak self] result in
             switch result {
             case .success:
@@ -155,7 +159,7 @@ class PhotoDetailViewModel {
         }
     }
     
-    private func handleAddingComment(with request: PhotoCommentsRequest) {
+    func handleAddingComment(with request: PhotoCommentsRequest) {
         self.flickrService.addComment(with: request, completion: { result in
             switch result {
             case .failure(let error):
@@ -176,7 +180,7 @@ class PhotoDetailViewModel {
         })
     }
     
-    private func handleFlickrServiceError(with error: FlickrServiceError?) {
+    func handleFlickrServiceError(with error: FlickrServiceError?) {
         guard let error = error else { return }
         DispatchQueue.main.async { [weak self] in
            switch error {
@@ -188,5 +192,4 @@ class PhotoDetailViewModel {
            }
         }
     }
-    
 }

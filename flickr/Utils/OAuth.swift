@@ -77,8 +77,12 @@ class OAuth: OAuthable {
         Environment.shared.signedInUser = nil
     }
     
-    // MARK: Private
-    private func checkToken(with crediential: OAuthSwiftCredential, completion: @escaping (Result<Void,Error>) -> Void) {
+}
+
+// MARK: - Private Functions
+private extension OAuth {
+    
+    func checkToken(with crediential: OAuthSwiftCredential, completion: @escaping (Result<Void,Error>) -> Void) {
         var parameters = FlickrService.buildBaseDictionary(method: .checkToken, withApiKey: true)
         parameters["oauth_token"] = crediential.oauthToken
 

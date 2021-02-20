@@ -9,8 +9,7 @@
 import Combine
 import UIKit
 
-
-class PhotoCollectionTableViewCell: UITableViewCell {
+final class PhotoCollectionTableViewCell: UITableViewCell {
 
     // MARK: - Variables
 

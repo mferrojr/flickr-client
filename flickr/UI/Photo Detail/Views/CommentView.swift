@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class CommentView: UIView {
+final class CommentView: UIView {
     
     // MARK: - Variables
     
@@ -51,8 +51,13 @@ class CommentView: UIView {
         self.commentLabel.text = comment.content
     }
     
+}
+
+// MARK: - Private Functions
+private extension CommentView {
+    
     // MARK: Private
-    private func setup() {
+    func setup() {
         self.addSubview(self.nameLabel)
         self.nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding).isActive = true
         self.nameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding).isActive = true
@@ -64,4 +69,5 @@ class CommentView: UIView {
         self.commentLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding).isActive = true
         self.commentLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: padding).isActive = true
     }
+    
 }

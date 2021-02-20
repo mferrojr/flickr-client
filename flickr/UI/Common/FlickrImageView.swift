@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 // Reference: https://github.com/sgl0v/OnSwiftWings/blob/master/ImageCache.playground/Sources/MovieTableViewCell.swift
-class FlickrImageView: UIImageView {
+final class FlickrImageView: UIImageView {
  
     // MARK: - Variables
     
@@ -37,9 +37,13 @@ class FlickrImageView: UIImageView {
         self.animator.stopAnimation(true)
         self.cancellable?.cancel()
     }
+
+}
+
+// MARK: - Private Functions
+private extension FlickrImageView {
     
-    // MARK: Private
-    private func showImage(image: UIImage?) {
+    func showImage(image: UIImage?) {
         self.alpha = 0.0
         self.image = image
         self.animator.addAnimations { [weak self] in
@@ -48,11 +52,12 @@ class FlickrImageView: UIImageView {
         self.animator.startAnimation()
     }
 
-    private func loadImage(for url: URL) -> AnyPublisher<UIImage?, Never> {
+    func loadImage(for url: URL) -> AnyPublisher<UIImage?, Never> {
         return Just(url.absoluteString)
         .flatMap({ photoUrl -> AnyPublisher<UIImage?, Never> in
            return ImageLoader.shared.loadImage(from: url)
         })
         .eraseToAnyPublisher()
     }
+    
 }

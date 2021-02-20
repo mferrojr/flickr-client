@@ -127,8 +127,12 @@ class PhotoCollectionViewModel {
         }
     }
     
-    // MARK: Private
-    private func calculateIndexPathsToReload(from newPhotos: [PhotoCollectionModel]?) -> [IndexPath]? {
+}
+
+// MARK: - functions
+private extension PhotoCollectionViewModel {
+    
+    func calculateIndexPathsToReload(from newPhotos: [PhotoCollectionModel]?) -> [IndexPath]? {
         guard let newPhotos = newPhotos else { return nil }
         
         let startIndex = self.data.count - newPhotos.count
@@ -136,7 +140,7 @@ class PhotoCollectionViewModel {
         return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
     }
     
-    private func searchPhotosOperation(by tag: String) -> Operation {
+    func searchPhotosOperation(by tag: String) -> Operation {
         self.searchContext = SearchPhotosContext()
         let searchPhotosOperation = SearchPhotosOperation(
             flickrServicable: self.flickrService,
@@ -150,7 +154,7 @@ class PhotoCollectionViewModel {
         return searchPhotosOperation
     }
     
-    private func fetchCompletionBlock() -> Operation {
+    func fetchCompletionBlock() -> Operation {
         let completionOperation = Operation()
         completionOperation.completionBlock = { [weak self] in
             if let error = self?.searchContext.error {
@@ -193,7 +197,7 @@ class PhotoCollectionViewModel {
         return completionOperation
     }
     
-    private func handleFlickrServiceError(with error: FlickrServiceError?) {
+    func handleFlickrServiceError(with error: FlickrServiceError?) {
         guard let error = error else { return }
         DispatchQueue.main.async { [weak self] in
            switch error {
@@ -205,5 +209,4 @@ class PhotoCollectionViewModel {
            }
         }
     }
-    
 }

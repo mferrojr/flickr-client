@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoDetailViewController: UIViewController {
+final class PhotoDetailViewController: UIViewController {
 
     // MARK: - Variables
     
@@ -203,121 +203,6 @@ class PhotoDetailViewController: UIViewController {
     }
     
     // MARK: - Functions
-    
-    // MARK: Private
-    @objc
-    private func submitPressed(_ sender: UIButton) {
-        self.viewModel.add(by: self.model.photo.id, with: self.commentsTextView.text)
-    }
-    
-    private func setUpScrollView() {
-        self.view.addSubview(self.scrollView)
-        self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-    }
-    
-    private func setUpHeaderLabel(){
-        self.scrollView.addSubview(self.headerLabel)
-        self.headerLabel.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: padding).isActive = true
-        self.headerLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.headerLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-    }
-    
-    private func setUpPhotoImage(){
-        self.scrollView.addSubview(self.photoImageView)
-        self.photoImageView.topAnchor.constraint(equalTo: self.headerLabel.bottomAnchor, constant: padding).isActive = true
-        self.photoImageView.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
-        self.photoImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-    }
-    
-    private func setUpAuthorLabel(){
-        self.scrollView.addSubview(self.authorLabel)
-        self.authorLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: padding).isActive = true
-        self.authorLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.authorLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-    }
-    
-    private func setUpDescriptionLabel(){
-        self.scrollView.addSubview(self.descriptionLabel)
-        self.descriptionTopConstraint =
-            self.descriptionLabel.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: 5)
-        self.descriptionTopConstraint?.isActive = true
-        self.descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.descriptionLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-    }
-    
-    private func setUpSeparator1(){
-        self.scrollView.addSubview(self.separator1)
-        self.descriptionBottomConstraint = self.separator1.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 10)
-        self.descriptionBottomConstraint?.isActive = true
-        self.separator1.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.separator1.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-        self.separator1.heightAnchor.constraint(equalToConstant: 1).isActive  = true
-    }
-    
-    private func setUpStatsStackContainer() {
-        self.scrollView.addSubview(self.statsStackContainer)
-        self.statsStackContainer.topAnchor.constraint(equalTo: self.separator1.bottomAnchor).isActive = true
-        self.statsStackContainer.heightAnchor.constraint(equalToConstant: 30).isActive  = true
-        self.statsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        self.statsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-    }
-    
-    private func setUpStatsStack(){
-        self.statsStackContainer.addSubview(self.statsStack)
-        self.statsStack.topAnchor.constraint(equalTo: self.statsStackContainer.topAnchor).isActive = true
-        self.statsStack.bottomAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
-        self.statsStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.statsStack.addArrangedSubview(self.numFavesLabel)
-        self.statsStack.addArrangedSubview(self.numCommentsLabel)
-    }
-    
-    private func setUpSeparator2(){
-        self.scrollView.addSubview(self.separator2)
-        self.separator2.topAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
-        self.separator2.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.separator2.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-        self.separator2.heightAnchor.constraint(equalToConstant: 1).isActive  = true
-    }
-    
-    private func setUpCommentsStackContainer(){
-        self.scrollView.addSubview(self.commentsStackContainer)
-        self.commentsTopConstraint = self.commentsStackContainer.topAnchor.constraint(equalTo: self.separator2.bottomAnchor)
-        self.commentsTopConstraint?.isActive = true
-        self.commentsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        self.commentsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-    }
-    
-    private func setUpCommentsStack(){
-        self.commentsStackContainer.addSubview(self.commentsStack)
-        self.commentsStack.topAnchor.constraint(equalTo: self.commentsStackContainer.topAnchor).isActive = true
-        self.commentsStack.leadingAnchor.constraint(equalTo: self.commentsStackContainer.leadingAnchor).isActive = true
-        self.commentsStack.trailingAnchor.constraint(equalTo: self.commentsStackContainer.trailingAnchor).isActive = true
-        self.commentsStack.bottomAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor).isActive = true
-    }
-    
-    private func setUpCommentsTextView(){
-        self.scrollView.addSubview(self.commentsTextView)
-        self.commentsTextView.topAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor, constant: padding).isActive = true
-        self.commentsTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
-        self.commentsTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
-        self.commentsTextView.heightAnchor.constraint(equalToConstant: 75).isActive  = true
-    }
-    
-    private func setUpSubmit(){
-        self.scrollView.addSubview(self.submitButton)
-        self.submitButton.topAnchor.constraint(equalTo: self.commentsTextView.bottomAnchor, constant: padding).isActive = true
-        self.submitButton.heightAnchor.constraint(equalToConstant: 30).isActive  = true
-        self.submitButton.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
-        self.submitButton.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
-    }
-    
-    private func setSubmitBtn(enabled: Bool) {
-        self.submitButton.isEnabled = enabled
-        self.submitButton.alpha = enabled ? 1.0 : 0.5
-    }
 
 }
 
@@ -383,8 +268,123 @@ extension PhotoDetailViewController: UITextViewDelegate {
     
 }
 
-// MARK: - Helpers
+// MARK: - Private Functions
 private extension PhotoDetailViewController {
+    
+    // MARK: Private
+    @objc
+    func submitPressed(_ sender: UIButton) {
+        self.viewModel.add(by: self.model.photo.id, with: self.commentsTextView.text)
+    }
+    
+    func setUpScrollView() {
+        self.view.addSubview(self.scrollView)
+        self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+    }
+    
+    func setUpHeaderLabel(){
+        self.scrollView.addSubview(self.headerLabel)
+        self.headerLabel.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: padding).isActive = true
+        self.headerLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.headerLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+    }
+    
+    func setUpPhotoImage(){
+        self.scrollView.addSubview(self.photoImageView)
+        self.photoImageView.topAnchor.constraint(equalTo: self.headerLabel.bottomAnchor, constant: padding).isActive = true
+        self.photoImageView.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
+        self.photoImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+    }
+    
+    func setUpAuthorLabel(){
+        self.scrollView.addSubview(self.authorLabel)
+        self.authorLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: padding).isActive = true
+        self.authorLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.authorLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+    }
+    
+    func setUpDescriptionLabel(){
+        self.scrollView.addSubview(self.descriptionLabel)
+        self.descriptionTopConstraint =
+            self.descriptionLabel.topAnchor.constraint(equalTo: self.authorLabel.bottomAnchor, constant: 5)
+        self.descriptionTopConstraint?.isActive = true
+        self.descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.descriptionLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+    }
+    
+    func setUpSeparator1(){
+        self.scrollView.addSubview(self.separator1)
+        self.descriptionBottomConstraint = self.separator1.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 10)
+        self.descriptionBottomConstraint?.isActive = true
+        self.separator1.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.separator1.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+        self.separator1.heightAnchor.constraint(equalToConstant: 1).isActive  = true
+    }
+    
+    func setUpStatsStackContainer() {
+        self.scrollView.addSubview(self.statsStackContainer)
+        self.statsStackContainer.topAnchor.constraint(equalTo: self.separator1.bottomAnchor).isActive = true
+        self.statsStackContainer.heightAnchor.constraint(equalToConstant: 30).isActive  = true
+        self.statsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.statsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    }
+    
+    func setUpStatsStack(){
+        self.statsStackContainer.addSubview(self.statsStack)
+        self.statsStack.topAnchor.constraint(equalTo: self.statsStackContainer.topAnchor).isActive = true
+        self.statsStack.bottomAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
+        self.statsStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.statsStack.addArrangedSubview(self.numFavesLabel)
+        self.statsStack.addArrangedSubview(self.numCommentsLabel)
+    }
+    
+    func setUpSeparator2(){
+        self.scrollView.addSubview(self.separator2)
+        self.separator2.topAnchor.constraint(equalTo: self.statsStackContainer.bottomAnchor).isActive = true
+        self.separator2.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.separator2.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+        self.separator2.heightAnchor.constraint(equalToConstant: 1).isActive  = true
+    }
+    
+    func setUpCommentsStackContainer(){
+        self.scrollView.addSubview(self.commentsStackContainer)
+        self.commentsTopConstraint = self.commentsStackContainer.topAnchor.constraint(equalTo: self.separator2.bottomAnchor)
+        self.commentsTopConstraint?.isActive = true
+        self.commentsStackContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.commentsStackContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    }
+    
+    func setUpCommentsStack(){
+        self.commentsStackContainer.addSubview(self.commentsStack)
+        self.commentsStack.topAnchor.constraint(equalTo: self.commentsStackContainer.topAnchor).isActive = true
+        self.commentsStack.leadingAnchor.constraint(equalTo: self.commentsStackContainer.leadingAnchor).isActive = true
+        self.commentsStack.trailingAnchor.constraint(equalTo: self.commentsStackContainer.trailingAnchor).isActive = true
+        self.commentsStack.bottomAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor).isActive = true
+    }
+    
+    func setUpCommentsTextView(){
+        self.scrollView.addSubview(self.commentsTextView)
+        self.commentsTextView.topAnchor.constraint(equalTo: self.commentsStackContainer.bottomAnchor, constant: padding).isActive = true
+        self.commentsTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: padding).isActive = true
+        self.commentsTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -padding).isActive = true
+        self.commentsTextView.heightAnchor.constraint(equalToConstant: 75).isActive  = true
+    }
+    
+    func setUpSubmit(){
+        self.scrollView.addSubview(self.submitButton)
+        self.submitButton.topAnchor.constraint(equalTo: self.commentsTextView.bottomAnchor, constant: padding).isActive = true
+        self.submitButton.heightAnchor.constraint(equalToConstant: 30).isActive  = true
+        self.submitButton.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
+        self.submitButton.centerXAnchor.constraint(equalTo: self.scrollView.centerXAnchor).isActive = true
+    }
+    
+    func setSubmitBtn(enabled: Bool) {
+        self.submitButton.isEnabled = enabled
+        self.submitButton.alpha = enabled ? 1.0 : 0.5
+    }
     
     func addCommentToStack(with comment: CommentEntity) {
         let commentView = CommentView()

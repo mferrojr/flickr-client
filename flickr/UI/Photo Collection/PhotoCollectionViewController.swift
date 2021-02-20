@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoCollectionViewController: UIViewController {
+final class PhotoCollectionViewController: UIViewController {
 
     // MARK: - Variables
     
@@ -93,56 +93,6 @@ class PhotoCollectionViewController: UIViewController {
     // MARK: Public
     func photoSelected(of photo: PhotoCollectionModel) {
         self.coordinator?.viewPhoto(of: photo)
-    }
-
-    // MARK: Private
-    private func buildNavigationBar() {
-        self.definesPresentationContext = true
-        self.navigationItem.rightBarButtonItem = signInOrOutButton
-    }
-    
-    private func setUpSearchController() {
-        self.searchController = UISearchController(searchResultsController: nil)
-        self.searchController?.delegate = self
-        self.searchController?.searchBar.delegate = self
-        self.searchController?.searchResultsUpdater = self
-        self.searchController?.searchBar.sizeToFit()
-        self.searchController?.searchBar.placeholder = "Search By Tag"
-        self.searchController?.obscuresBackgroundDuringPresentation = false
-        self.navigationItem.searchController = searchController
-    }
-    
-    private func setUpTableView() {
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.tableView)
-        
-        self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        
-        self.tableView.tableHeaderView = UIView(frame: .zero)
-        self.tableView.tableFooterView = UIView(frame: .zero)
-    }
-    
-    private func setUpLandingView() {
-        self.landingView.addSubview(self.landingLabel)
-        self.landingLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.landingLabel.centerYAnchor.constraint(equalTo: self.landingView.centerYAnchor).isActive = true
-        self.landingLabel.centerXAnchor.constraint(equalTo: self.landingView.centerXAnchor).isActive = true
-        self.tableView.backgroundView = self.landingView
-    }
-    
-    private func setUpActivityIndicator() {
-        self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.activityIndicator)
-        self.activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-    }
-    
-    @objc
-    private func signInPressed(_ btn: UIButton) {
-        self.viewModel.signInOrOut()
     }
     
 }
@@ -241,7 +191,7 @@ extension PhotoCollectionViewController: UITableViewDataSourcePrefetching {
     
 }
 
-// MARK: Helpers
+// MARK: - Private Functions
 private extension PhotoCollectionViewController {
 
     func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
@@ -265,5 +215,54 @@ private extension PhotoCollectionViewController {
             self.landingLabel.text = "Find Your Inspiration"
             self.landingView.isHidden = false
         }
+    }
+    
+    func buildNavigationBar() {
+        self.definesPresentationContext = true
+        self.navigationItem.rightBarButtonItem = signInOrOutButton
+    }
+    
+    func setUpSearchController() {
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.searchController?.delegate = self
+        self.searchController?.searchBar.delegate = self
+        self.searchController?.searchResultsUpdater = self
+        self.searchController?.searchBar.sizeToFit()
+        self.searchController?.searchBar.placeholder = "Search By Tag"
+        self.searchController?.obscuresBackgroundDuringPresentation = false
+        self.navigationItem.searchController = searchController
+    }
+    
+    func setUpTableView() {
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.tableView)
+        
+        self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        
+        self.tableView.tableHeaderView = UIView(frame: .zero)
+        self.tableView.tableFooterView = UIView(frame: .zero)
+    }
+    
+    func setUpLandingView() {
+        self.landingView.addSubview(self.landingLabel)
+        self.landingLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.landingLabel.centerYAnchor.constraint(equalTo: self.landingView.centerYAnchor).isActive = true
+        self.landingLabel.centerXAnchor.constraint(equalTo: self.landingView.centerXAnchor).isActive = true
+        self.tableView.backgroundView = self.landingView
+    }
+    
+    func setUpActivityIndicator() {
+        self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.activityIndicator)
+        self.activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+    }
+    
+    @objc
+    func signInPressed(_ btn: UIButton) {
+        self.viewModel.signInOrOut()
     }
 }
