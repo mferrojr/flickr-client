@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol PhotoCollectionViewModelDelegate: class {
+protocol PhotoCollectionViewModelDelegate: AnyObject {
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
     func onFetchFailed(with reason: String)
     func onSignOutCompleted()

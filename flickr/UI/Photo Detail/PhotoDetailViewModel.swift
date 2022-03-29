@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol PhotoDetailViewModelDelegate: class {
+protocol PhotoDetailViewModelDelegate: AnyObject {
     func onSubmitFailed(with: String)
     func onSubmitCompleted(with comment: CommentEntity)
     func onSignInFailed()
